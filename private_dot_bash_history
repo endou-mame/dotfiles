@@ -1,0 +1,538 @@
+sudo apt update && sudo apt upgrade
+lsb_release -a
+ls
+exit
+wsl
+ls
+cd home
+ls
+cd
+ls
+cdls
+ls
+winget install JanDeDobbeleer.OhMyPosh
+ls
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+.profile
+ls
+exit
+vi ~/.profile 
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+brew -v
+brew -
+brew -v
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+ls
+cd /
+ls
+cd usr/
+ls
+cd ..
+cd opt/
+ls
+exit
+cd home
+cd /home
+ls
+sudo apt install build-essential gcc procps curl wget file git
+cd ..
+cd opt/
+ls
+cd /
+test -d ~/.linuxbrew && eval "$(~/.linuxbrew/bin/brew shellenv)"
+test -d /home/linuxbrew/.linuxbrew && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >> ~/.bashrc
+brew install hello
+brew -v
+brew install jandedobbeleer/oh-my-posh/oh-my-posh
+brew update && brew upgrade oh-my-posh
+eval "$(oh-my-posh init bash)"
+exec bash
+cd $(brew --prefix oh-my-posh)
+ls
+cd themes/
+ls
+echo $HOME
+exit
+cd $(brew --prefix oh-my-posh)
+cd themes/
+ls
+$HOME
+cd /home/kakiuchi-shigenao/
+ls
+cd /home/
+ls
+cd /
+ls
+ls -a
+cat ~/.profile
+ls
+ls -a
+cd home/
+ls -a
+cd kakiuchi-shigenao/
+ls -a
+vi .profile 
+exit
+ls
+wsl
+ls
+cd /
+ls
+cd /home/kakiuchi-shigenao/
+ls
+cd /
+ls
+cd home/
+ls
+cd kakiuchi-shigenao/
+ls
+ls -a
+cd $(brew --prefix oh-my-posh)
+cd tht
+cd themes/
+ls
+cp wholespace.omp.json /home/kakiuchi-shigenao
+ls
+exit
+git
+git -v
+git --version
+exi
+exit
+brew install curl git wget gcc zlib libzip bzip2 readline openssl pkg-config autoconf
+which git
+git -v
+exit
+ls
+brew install screenfetch
+la
+ls
+cd /
+ls
+cd home/
+ls
+cd kakiuchi-shigenao/
+ls
+ls -a
+vi .profile 
+exit
+ls
+cd /home
+ls
+cd kakiuchi-shigenao/
+vi .profile 
+exi
+exit
+cd /home
+exit
+cd /homew
+cd /home]exit
+cd /home/kakiuchi-shigenao/
+ks
+ls- a
+wsl
+ls
+ls-a
+ls -
+ls -a
+vi .profile 
+rm -rf .profile.swp
+ls
+vi .profile 
+exit
+ls
+exit
+ls
+exit
+ls
+exit
+exitr
+brew install docker
+docker --version
+docker-compose --version
+brew install docker-compose
+docker-compose --version
+sudo service docker start
+sudo systemctl list-units --type=service
+brew uninstall docker
+brew uninstall docker-compose
+docker --version
+docker-compose --version
+# 必要なソフトウェアの事前ダウンロード
+sudo apt-get update
+sudo apt-get install -y ca-certificates curl gnupg
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+echo 'deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu jammy stable' | sudo tee /etc/apt/sources.list.d/docker.list
+sudo apt-get update
+cat /etc/apt/keyrings/docker.asc
+cat /etc/apt/sources.list.d/docker.list
+sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+sudo systemctl status docker
+docker --version
+brew list
+sudo service docker start
+sudo docker pull docker.io/library/hello-world
+sudo docker run docker.io/library/hello-world
+exit
+ssh -T git@github.comc
+cd ~/.ssh
+ls
+ls -a
+docker-compose --version
+docker -v
+docker-compose -v
+sudo apt-get install -y docker-compose-plugin
+docker compose -v
+docker compose --version
+docker compose -B
+docker compose -V
+docker compose -v
+docker compose version
+sudo apt install docker-compose -y
+docker-compose -v
+docker compose version
+ls
+exit
+ssh -T git@github.com
+chmod 0600 ~/.ssh/id_rsa_github
+ssh -T git@github.com
+chmod 0600 ~/.ssh/id_rsa_deprecated
+chmod 0600 ~/.ssh/id_rsa_aws_codecommit_nhklineapp
+chmod 0600 ~/.ssh/backend-stsf2_app_ssh_key.pem
+ls
+cd home
+ks
+ls
+cd /
+ls
+cd home
+ls
+cd kakiuchi-shigenao/
+ls
+ls -a
+mkdir projects
+mkdir sakura-tech
+mkdir stsf_frontend
+mkdir stsf_backend
+rm -rf stsf_backend/
+rm -rf stsf_frontend/
+ls
+code .
+cd sakura-tech/
+code .
+ls
+ls -a
+rm -rf .git/
+mkdir stsf_frontend
+cd stsf_frontend/
+code .
+cd ..
+rm -rf
+ls
+rm -rf stsf_frontend/
+ls
+ls -a
+cd home
+ls
+cd home
+cd /home
+ls
+cd kakiuchi-shigenao/
+ls
+ls -a
+cd .ssh/
+ls
+sudo usermod -aG docker $USER
+sudo apt-get remove docker-compose
+docker composer version
+docker compose version
+docker-compose -v
+docker -v
+sudo cater /etc/wsl.conf
+sudo cat /etc/wsl.conf
+exit
+ls
+cd /
+ls
+cat /etc/
+ls
+cd /etc/
+ls
+sudo cat wsl.conf 
+sudo vim wsl.conf 
+sudo cat wsl.conf 
+exit
+docker status
+service docker status
+exit
+
+sudo vim wsl.conf 
+exit
+service docker status
+service docker start
+cat /etc/wsl.conf 
+$USER
+cat $USER
+$USER
+la
+$USER
+cat /etc/passwd | cut -d : -f 1
+ls
+sudo vim /etc/wsl.conf 
+exit
+service docker status
+service docker start
+sudo usermod -aG docker $USER
+service docker start
+sudo service docker start
+sudo vim /etc/wsl.conf 
+exit
+sudo service docker start
+service docker status
+service docker finish
+service docker stio
+service docker stop
+sudo service docker stop
+sudo service docker status
+sudo service docker stop
+service docker stop
+docker run hello-world
+service docker restart
+sudo service docker restart
+sudo visudo
+service docker stop
+exit
+sudo visudo
+service docker stop
+service docker restart
+sudo visudo
+service docker start
+service docker status
+service docker start
+ls
+wsl
+ls
+
+sudo usermod -a -G docker $USER
+sudo reboot
+exit
+service docker start
+sudo gpasswd -a tiffany docker
+cat /etc/group | grep docker
+docker run hello-world
+wsl
+sudo visudo
+exit
+cd /home
+service docker start
+ls
+sudo vim /etc/wsl.conf 
+cat /etc/wsl.conf 
+exit
+service docker status
+sudo service docker start
+cat /etc/wsl.conf 
+sudo vim /etc/wsl.conf 
+exit
+service docker status:
+service docker status
+docker  ps
+exit
+docker ps
+service docker status
+cat /etc/group | grep docker
+ls
+service docker status
+sudo service docker start
+service docker status
+ls
+exit
+git pull
+git fetch
+git pull
+cd /homw
+cd /
+cd home/
+ls
+eval `ssh-agent`
+ssh-add ~/.ssh/id_rsa_github
+eval `ssh-agent`
+ssh-add ~/.ssh/id_rsa_github
+ls
+exit
+git config
+eval `ssh-agent`
+ssh-add ~/.ssh/id_rsa_github
+sudo service docker start
+exit
+git config --local --list
+git config --list
+ls
+exit
+eval "$(ssh-agent -s)"
+ls
+cd /home
+ls
+ls -a
+cd kakiuchi-shigenao/
+ls -a
+touch .bash_profile
+sudo vi .bash_profile 
+exit
+ls
+cd /home/
+exit
+ls
+cd /homwe
+cd /home
+ls
+cd kakiuchi-shigenao/
+ls -a
+cat .bashrc 
+exit
+exit
+ls
+wsl
+brew install openssh-client
+brew install socat
+brew list
+brew install keychain
+ls
+cd /home/kakiuchi-shigenao/
+ls
+ls -a
+vi .bashrc 
+exit
+ls
+cd /home/kakiuchi-shigenao/
+ls
+cd ..
+code ./kakiuchi-shigenao/
+brew list
+ls
+cd linuxbrew/
+ls
+ls -a
+cd /
+code .
+ls
+cd /home/kakiuchi-shigenao/
+ls
+cd ..
+ls
+cd linuxbrew/
+ls
+cd .linuxbrew/
+ls
+keychain
+exit
+cd /home/
+code .
+exit
+cd /home/
+ls
+cd kakiuchi-shigenao/
+ls
+code .
+exit
+dpkg -l
+apt list --installed
+ls
+cd /home/
+code .
+exit
+exit
+ls
+exit
+brew list
+exit
+kls
+ls
+cat /etc/wsl.conf 
+exit
+ls
+linuxbrew
+brew list
+brew list
+exit
+ssh-add ~/.ssh/id_ed25519_github
+exit
+ssh -T git@github.com
+ssh-add ~/.ssh/id_ed25519
+ls
+exit
+ssh -T git@github.com
+exit
+ls
+exit
+cd .devcontainer/
+cd apache/
+mkdir html
+echo "<?php phpinfo(); ?>" > html/index.php
+docker logs dev
+docker build -t test-devcontainer .devcontainer
+docker run -it --rm test-devcontainer /bin/bash
+docker build -t test-devcontainer .devcontainer
+docker run -it --rm test-devcontainer /bin/bash
+docker build -t test-devcontainer .devcontainer
+docker run -it --rm test-devcontainer /bin/bash:
+docker run -it --rm test-devcontainer /bin/bash
+docker build -t test-devcontainer .devcontainer
+docker run -it --rm test-devcontainer /bin/sh
+docker build -t test-devcontainer .devcontainer
+docker-compose -f .devcontainer/docker-compose.yml up
+docker compose -f .devcontainer/docker-compose.yml up
+docker compose -f .devcontainer/compose.yml up
+ls
+ls -a
+docker compose -f ./devcontainer/compose.yaml up
+docker compose -f .devcontainer/compose.yaml up
+docker compose -f .devcontainer/compose.yaml down
+docker compose -f .devcontainer/compose.yaml up
+node -v
+docker logs stsf_backend_apache
+sudo docker logs stsf_backend_apache
+docker logs stsf_backend_php-fpm
+docker image prune
+docker system prune   
+y
+docker builder prune
+docker rm $(docker ps -a)
+docker rmi $(docker images -q)
+docker volume rm $(docker volume ls -qf dangling=true)
+tar
+git revert
+[200~git revert HEAD~
+git revert HEAD~
+git push
+git revert HEAD
+docker ps -a
+docker images
+docker image prune
+docker system prune
+docker builder prune
+docker rm $(docker ps -a)
+docker rmi $(docker images -q)
+cat /etc/wsl.conf
+docker run -it --rm openapitools/openapi-generator-cli:v7.4.0 sh
+docker run -it --rm openapitools/openapi-generator-cli:v7.4.0 generate
+docker run -it --rm openapitools/openapi-generator-cli:v7.4.0 bash
+cd projects/
+cd sakura-tech/
+ls
+cd /
+cd home
+cd p
+ls
+cd kakiuchi-shigenao/
+ls
+cd projects/
+cd sakura-tech/
+cd stsf_backend/
+l
+cd laravel/
+ls
+cat .env
+id -u
+id -g

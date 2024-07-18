@@ -1,0 +1,15 @@
+[user]
+	name = 垣内 繁直
+	email = kakiuchi-shigenao@wiznet.co.jp
+[merge]
+	ff = false
+[pull]
+	ff = only
+	rebase = false
+[fetch]
+	prune = false
+[rebase]
+	autoStash = false
+
+[init]
+	defaultBranch = main
