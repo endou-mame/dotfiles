@@ -1,0 +1,15 @@
+# Claude Code - ローカル専用ファイル
+.claude/projects/
+.claude/__store.db
+.claude/file-history/
+.claude/todos/
+.claude/history.jsonl
+.claude/shell-snapshots/
+.claude/debug/
+.claude/statsig/
+.claude/.DS_Store
+.claude/plugins/
+.claude/ide/
+.claude/session-env/
+.claude/.update.lock
+.claude/.credentials.json
