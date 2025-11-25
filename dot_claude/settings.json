@@ -1,23 +1,23 @@
 {
   "hooks": {
-    "Stop": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node ~/.claude/hooks/notify.mjs"
-          }
-        ]
-      }
-    ],
     "Notification": [
       {
         "matcher": "",
         "hooks": [
           {
             "type": "command",
-            "command": "node ~/.claude/hooks/notify.mjs"
+            "command": "cat | jq -r '(.title // \"Claude Code\"), (.message // \"通知が発生しました\")' | { read title; read message; ~/.claude/hooks/notify-to-windows.sh -t \"$title\" -m \"$message\" -T info; }"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/notify-to-windows.sh -t \"Claude Code\" -m \"作業が完了しました。\" -T success"
           }
         ]
       }
