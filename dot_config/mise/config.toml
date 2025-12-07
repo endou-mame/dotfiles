@@ -1,0 +1,4 @@
+[tools]
+node = "24"
+php = "8.5"
+python = "latest"

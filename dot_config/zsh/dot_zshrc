@@ -1,0 +1,171 @@
+# =============================================================================
+# History 設定
+# =============================================================================
+HISTFILE="$ZDOTDIR/.zsh_history"
+HISTSIZE=10000
+SAVEHIST=10000
+setopt HIST_IGNORE_DUPS      # 重複を無視
+setopt HIST_IGNORE_ALL_DUPS  # 古い重複を削除
+setopt HIST_SAVE_NO_DUPS     # 保存時に重複を除去
+setopt SHARE_HISTORY         # セッション間で履歴を共有
+setopt HIST_REDUCE_BLANKS    # 余分な空白を削除
+
+# =============================================================================
+# 基本設定
+# =============================================================================
+bindkey -e                   # Emacsキーバインド
+setopt AUTO_CD               # ディレクトリ名だけでcd
+setopt AUTO_PUSHD            # cd時に自動でpushd
+setopt PUSHD_IGNORE_DUPS     # pushdで重複を無視
+
+# =============================================================================
+# 補完システム
+# =============================================================================
+autoload -Uz compinit
+compinit -d "$ZDOTDIR/.zcompdump"    # ← キャッシュもここに
+setopt COMPLETE_IN_WORD      # 単語の途中でも補完
+setopt ALWAYS_TO_END         # 補完後カーソルを末尾に
+
+# =============================================================================
+# fastfetch (system info ツール)
+# https://github.com/fastfetch-cli/fastfetch
+# =============================================================================
+fastfetch
+
+# =============================================================================
+# starship (prompt)
+# https://starship.rs/
+# =============================================================================
+eval "$(starship init zsh)"
+
+# =============================================================================
+# Sheldon (zsh/bash プラグイン管理)
+# https://github.com/rossmacarthur/sheldon
+# =============================================================================
+eval "$(sheldon source)"
+
+# =============================================================================
+# fzf (汎用的なコマンドライン fuzzy finder)
+# https://github.com/junegunn/fzf
+# =============================================================================
+
+# Set up fzf key bindings and fuzzy completion
+source <(fzf --zsh)
+
+# =============================================================================
+# Mise (バージョン管理ツール)
+# https://mise.jdx.dev
+# =============================================================================
+eval "$(mise activate zsh)"
+
+# =============================================================================
+# キーバインド追加（Home/End）
+# =============================================================================
+bindkey "^[[H" beginning-of-line
+bindkey "^[[F" end-of-line
+
+# =============================================================================
+# エイリアス
+# =============================================================================
+# eza settings
+# https://github.com/z-shell/zsh-eza
+alias ls='eza $eza_params'
+alias l='eza --git-ignore $eza_params'
+alias ll='eza --all --header --long $eza_params'
+alias llm='eza --all --header --long --sort=modified $eza_params'
+alias la='eza -lbhHigUmuSa'
+alias lx='eza -lbhHigUmuSa@'
+alias lt='eza --tree $eza_params'
+alias tree='eza --tree $eza_params'
+
+# bat settings
+# https://github.com/sharkdp/bat
+alias cat="bat --theme-dark default --theme-light GitHub"
+
+# =============================================================================
+# ghq + fzf + eza Gitリポジトリ管理
+# =============================================================================
+# 共通: fzf でリポジトリ選択
+function _ghq-fzf_select() {
+  ghq list | fzf --preview "eza -l -g -a --icons $(ghq root)/{} | tail -n+4 | awk '{print \$6\"/\"\$8\" \"\$9 \" \" \$10}'"
+}
+
+# 参照→移動
+function gitls() {
+  local src=$(_ghq-fzf_select)
+  if [ -n "$src" ]; then
+    cd "$(ghq root)/$src"
+  fi
+}
+compdef _nothing gitls
+
+# 取得→移動
+function gitget() {
+  if [ -z "$1" ]; then
+    echo "Usage: gitget <repository>"
+    return 1
+  fi
+  ghq get "$@" && cd "$(ghq list -p | grep -E "$(basename ${@: -1} .git)$" | head -1)"
+}
+compdef _nothing gitget
+
+# 参照→削除
+function gitrm() {
+  # 最初に ghq root を取得（後でカレントディレクトリが無効になる前に）
+  local ghq_root="$(ghq root)"
+
+  local src=$(_ghq-fzf_select)
+  if [ -z "$src" ]; then
+    return 1
+  fi
+
+  local repo_path="$ghq_root/$src"
+  if [ ! -e "$repo_path" ]; then
+    echo "Repository not found: $repo_path"
+    return 1
+  fi
+
+  echo "Delete: $repo_path"
+
+  # 未コミットの変更をチェック
+  local uncommitted=$(git -C "$repo_path" -c status.color=always status --short)
+  # プッシュされていないコミットをチェック
+  local unpushed=$(git -C "$repo_path" log --branches --not --remotes --simplify-by-decoration --decorate --oneline --color=always 2>/dev/null)
+
+  if [ -n "$uncommitted" ] || [ -n "$unpushed" ]; then
+    echo "\n⚠️  Warning: Uncommitted changes or unpushed commits detected:"
+    [ -n "$uncommitted" ] && echo "$uncommitted"
+    [ -n "$unpushed" ] && echo "$unpushed"
+    echo ""
+    read -q "confirm?These changes will be deleted permanently. OK? [y/N]: "
+  else
+    read -q "confirm?Are you sure? [y/N]: "
+  fi
+  echo
+
+  if [[ ! "$confirm" =~ ^[Yy]$ ]]; then
+    echo "Cancelled."
+    return 1
+  fi
+
+  # 削除対象内にいる場合は先に移動（削除前に必ず実行）
+  if [[ "${PWD:A}" == "${repo_path:A}"* ]]; then
+    cd "$ghq_root" || cd "$HOME"
+  fi
+
+  rm -rf "$repo_path"
+
+  # 空になった親ディレクトリを再帰的に削除（ghq root まで）
+  local parent="$(dirname "$repo_path")"
+  while [ "$parent" != "$ghq_root" ] && [ -d "$parent" ]; do
+    if [ -z "$(ls -A "$parent")" ]; then
+      rm -rf "$parent"
+      parent="$(dirname "$parent")"
+    else
+      break
+    fi
+  done
+
+  echo "Successfully deleted: $repo_path"
+}
+compdef _nothing gitrm

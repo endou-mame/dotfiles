@@ -1,35 +1,8 @@
 {
-  "hooks": {
-    "Notification": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "cat | jq -r '(.title // \"Claude Code\"), (.message // \"通知が発生しました\")' | { read title; read message; ~/.claude/hooks/notify-to-windows.sh -t \"$title\" -m \"$message\" -T info; }"
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/notify-to-windows.sh -t \"Claude Code\" -m \"作業が完了しました。\" -T success"
-          }
-        ]
-      }
-    ]
-  },
-  "enabledPlugins": {
-    "document-skills@anthropic-agent-skills": true
-  },
-  "alwaysThinkingEnabled": true,
   "includeCoAuthoredBy": false,
   "permissions": {
     "allow": [
+      "Skill(*)",
       "Bash(brew services:*)",
       "Bash(cat:*)",
       "Bash(curl:*)",
@@ -72,5 +45,42 @@
     ],
     "deny": [],
     "ask": []
-  }
+  },
+  "hooks": {
+    "Notification": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cat | jq -r '(.title // \"Claude Code\"), (.message // \"通知が発生しました\")' | { read title; read message; ~/.claude/hooks/notify-to-windows.sh -t \"$title\" -m \"$message\" -T info; }"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/notify-to-windows.sh -t \"Claude Code\" -m \"作業が完了しました。\" -T success"
+          }
+        ]
+      }
+    ]
+  },
+  "enabledPlugins": {
+    "document-skills@anthropic-agent-skills": true,
+    "code-review@claude-code-plugins": true,
+    "commit-commands@claude-code-plugins": true,
+    "feature-dev@claude-code-plugins": true,
+    "frontend-design@claude-code-plugins": true,
+    "example-skills@anthropic-agent-skills": true,
+    "cc-helper@cc-plugins": false,
+    "cc-skill-agent-guide@cc-plugins": false,
+    "cc-builder@cc-plugins": true,
+    "cc-optimizer@cc-plugins": true
+  },
+  "alwaysThinkingEnabled": true
 }

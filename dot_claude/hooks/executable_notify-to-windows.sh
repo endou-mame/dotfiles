@@ -61,8 +61,9 @@ Add-Type -AssemblyName System.Windows.Forms
 \$notification.Dispose()
 "
 
-    # 通知送信の実行（同期実行）
-    timeout 5s "$POWERSHELL_PATH" -NoProfile -Command "$notification_script" >/dev/null 2>&1
+    # 通知送信の実行（非同期・バックグラウンド）
+    "$POWERSHELL_PATH" -NoProfile -Command "$notification_script" >/dev/null 2>&1 &
+    disown
 
     return 0
 }
@@ -153,7 +154,6 @@ main() {
 
     # 通知送信（同期）
     send_notification "$title" "$message" "$type" "$duration"
-    echo "通知を送信しました"
     exit 0
 }
 

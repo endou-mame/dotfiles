@@ -1,0 +1,35 @@
+# =============================================================================
+# PATH 設定
+# =============================================================================
+typeset -U path
+
+# NOTE: Windowns 専用: Windows ユーザー名を取得 (WSL2)
+WIN_USER=$(/mnt/c/Windows/System32/cmd.exe /c "echo %USERNAME%" 2>/dev/null | tr -d '\r')
+
+path=(
+  $path
+  /usr/local/bin
+  /usr/local/sbin
+  /usr/bin
+  /usr/sbin
+  /bin
+  /sbin
+  # NOTE: Windowns 専用: Windows側のコマンド (必要なものだけ)
+  /mnt/c/Users/${WIN_USER}/AppData/Local/Programs/Microsoft\ VS\ Code/bin
+)
+
+# =============================================================================
+# Linuxbrew (Homebrew for Linux)
+# https://docs.brew.sh/Homebrew-on-Linux
+# =============================================================================
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+# =============================================================================
+# fzf (汎用的なコマンドライン fuzzy finder)
+# https://github.com/junegunn/fzf
+# =============================================================================
+export FZF_DEFAULT_OPTS="
+  --height 50%
+  --layout=reverse
+  --border
+"
