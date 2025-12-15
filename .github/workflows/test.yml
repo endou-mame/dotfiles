@@ -36,6 +36,9 @@ jobs:
             image: opensuse/tumbleweed:latest
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Install prerequisites
         shell: bash
         run: |
@@ -66,6 +69,13 @@ jobs:
         run: |
           echo "==> Installing chezmoi and applying dotfiles..."
 
+          # Copy checked out repo to testuser's home for chezmoi source
+          CHEZMOI_SOURCE="/home/testuser/.local/share/chezmoi"
+          mkdir -p "$CHEZMOI_SOURCE"
+          cp -r "$GITHUB_WORKSPACE"/* "$CHEZMOI_SOURCE/"
+          cp -r "$GITHUB_WORKSPACE"/.[!.]* "$CHEZMOI_SOURCE/" 2>/dev/null || true
+          chown -R testuser:testuser /home/testuser/.local
+
           # Run as testuser
           su - testuser -c '
             set -e
@@ -82,9 +92,9 @@ jobs:
             echo "Chezmoi version:"
             "$HOME/.local/bin/chezmoi" --version
 
-            # Initialize and apply dotfiles
-            echo "Applying dotfiles from ${{ env.GITHUB_USERNAME }}/dotfiles..."
-            "$HOME/.local/bin/chezmoi" init --apply ${{ env.GITHUB_USERNAME }}
+            # Initialize and apply dotfiles from local source
+            echo "Applying dotfiles from local source..."
+            "$HOME/.local/bin/chezmoi" init --apply --source "$HOME/.local/share/chezmoi"
 
             echo "==> chezmoi init --apply completed successfully!"
           '
