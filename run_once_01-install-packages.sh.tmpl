@@ -30,7 +30,6 @@ DISTRO_PACKAGES=(
     docker-buildx
     docker-compose
     gd
-    iptables-nft
     libzip
     oniguruma
     openssh
@@ -56,9 +55,9 @@ install_packages() {
     done
 }
 
-{{ else if or (eq .chezmoi.osRelease.id "ubuntu") (eq .chezmoi.osRelease.id "debian") }}
-# MARK: Debian / Ubuntu
-echo "Detected: {{ .chezmoi.osRelease.id }}"
+{{ else if eq .chezmoi.osRelease.id "ubuntu" }}
+# MARK: Ubuntu
+echo "Detected: Ubuntu"
 
 DISTRO_PACKAGES=(
     build-essential
@@ -76,6 +75,55 @@ install_packages() {
     local SUDO=""
     if command -v sudo &> /dev/null && [ "$EUID" -ne 0 ]; then
         SUDO="sudo"
+    fi
+
+    $SUDO apt-get update
+
+    for pkg in "$@"; do
+        if ! dpkg -l "$pkg" 2>/dev/null | grep -q "^ii"; then
+            echo "Installing: $pkg"
+            $SUDO apt-get install -y "$pkg"
+        else
+            echo "Already installed: $pkg"
+        fi
+    done
+}
+
+{{ else if eq .chezmoi.osRelease.id "debian" }}
+# MARK: Debian
+echo "Detected: Debian"
+
+DISTRO_PACKAGES=(
+    build-essential
+    containerd.io
+    docker-buildx-plugin
+    docker-ce
+    docker-ce-cli
+    docker-compose-plugin
+    libgd-dev
+    libonig-dev
+    libpq-dev
+    libzip-dev
+    openssh-client
+)
+
+install_packages() {
+    local SUDO=""
+    if command -v sudo &> /dev/null && [ "$EUID" -ne 0 ]; then
+        SUDO="sudo"
+    fi
+
+    # Add Docker official repository
+    if ! [ -f /etc/apt/sources.list.d/docker.list ]; then
+        echo "Adding Docker official repository..."
+        $SUDO apt-get update
+        $SUDO apt-get install -y ca-certificates curl gnupg
+
+        $SUDO install -m 0755 -d /etc/apt/keyrings
+        curl -fsSL https://download.docker.com/linux/debian/gpg | $SUDO gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+        $SUDO chmod a+r /etc/apt/keyrings/docker.gpg
+
+        echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | $SUDO tee /etc/apt/sources.list.d/docker.list > /dev/null
     fi
 
     $SUDO apt-get update
