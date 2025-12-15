@@ -83,8 +83,31 @@ alias tree='eza --tree $eza_params'
 alias cat="bat --theme-dark default --theme-light GitHub"
 
 # =============================================================================
-# ghq + fzf + eza Gitリポジトリ管理
+# 関数
 # =============================================================================
+
+# brew install/uninstall 時に Brewfile を自動更新
+function brew() {
+    command brew "$@"
+    local exit_code=$?
+
+    case "$1" in
+        install|uninstall|remove)
+            if [[ $exit_code -eq 0 ]]; then
+                echo "📦 Brewfile を更新中..."
+                command brew bundle dump --file=~/.Brewfile --force
+                if command -v chezmoi &>/dev/null; then
+                    chezmoi add ~/.Brewfile
+                    echo "✅ chezmoi に反映しました"
+                fi
+            fi
+            ;;
+    esac
+
+    return $exit_code
+}
+
+# NOTE: ghq + fzf + eza Gitリポジトリ管理
 # 共通: fzf でリポジトリ選択
 function _ghq-fzf_select() {
   ghq list | fzf --preview "eza -l -g -a --icons $(ghq root)/{} | tail -n+4 | awk '{print \$6\"/\"\$8\" \"\$9 \" \" \$10}'"
