@@ -1,0 +1,153 @@
+name: Test chezmoi dotfiles
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  GITHUB_USERNAME: endou-mame
+
+jobs:
+  test:
+    name: Test on ${{ matrix.distro }}
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ matrix.image }}
+      options: --user root
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - distro: Ubuntu 24.04
+            image: ubuntu:24.04
+          - distro: Ubuntu 22.04
+            image: ubuntu:22.04
+          - distro: Debian 12
+            image: debian:12
+          - distro: Fedora 40
+            image: fedora:40
+          - distro: Arch Linux
+            image: archlinux:latest
+          - distro: openSUSE Tumbleweed
+            image: opensuse/tumbleweed:latest
+
+    steps:
+      - name: Install prerequisites
+        shell: bash
+        run: |
+          echo "==> Installing prerequisites for ${{ matrix.distro }}..."
+
+          # Detect package manager and install curl, git, sudo
+          if command -v apt-get &> /dev/null; then
+            apt-get update
+            apt-get install -y curl git sudo
+          elif command -v dnf &> /dev/null; then
+            dnf install -y curl git sudo
+          elif command -v pacman &> /dev/null; then
+            pacman -Sy --noconfirm curl git sudo
+          elif command -v zypper &> /dev/null; then
+            zypper refresh
+            zypper install -y curl git sudo
+          fi
+
+      - name: Create test user
+        shell: bash
+        run: |
+          # Create a non-root user for testing (chezmoi works better as non-root)
+          useradd -m -s /bin/bash testuser
+          echo "testuser ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+
+      - name: Install and apply chezmoi
+        shell: bash
+        run: |
+          echo "==> Installing chezmoi and applying dotfiles..."
+
+          # Run as testuser
+          su - testuser -c '
+            set -e
+
+            # Create local bin directory
+            mkdir -p "$HOME/.local/bin"
+            export PATH="$HOME/.local/bin:$PATH"
+
+            # Install chezmoi using official script
+            echo "Installing chezmoi..."
+            sh -c "$(curl -fsLS get.chezmoi.io)" -- -b "$HOME/.local/bin"
+
+            # Verify chezmoi installation
+            echo "Chezmoi version:"
+            "$HOME/.local/bin/chezmoi" --version
+
+            # Initialize and apply dotfiles
+            echo "Applying dotfiles from ${{ env.GITHUB_USERNAME }}/dotfiles..."
+            "$HOME/.local/bin/chezmoi" init --apply ${{ env.GITHUB_USERNAME }}
+
+            echo "==> chezmoi init --apply completed successfully!"
+          '
+
+      - name: Verify dotfiles applied
+        shell: bash
+        run: |
+          echo "==> Verifying dotfiles were applied correctly..."
+
+          su - testuser -c '
+            set -e
+            export PATH="$HOME/.local/bin:$PATH"
+
+            # Check chezmoi status
+            echo "Chezmoi managed files:"
+            "$HOME/.local/bin/chezmoi" managed
+
+            # Check that key dotfiles exist
+            echo ""
+            echo "Checking key dotfiles..."
+
+            files_to_check=(
+              ".gitconfig"
+              ".zshenv"
+            )
+
+            all_ok=true
+            for file in "${files_to_check[@]}"; do
+              if [ -e "$HOME/$file" ]; then
+                echo "✓ $file exists"
+              else
+                echo "✗ $file is missing"
+                all_ok=false
+              fi
+            done
+
+            if [ "$all_ok" = true ]; then
+              echo ""
+              echo "==> All dotfiles verified successfully!"
+            else
+              echo ""
+              echo "==> Some dotfiles are missing!"
+              exit 1
+            fi
+          '
+
+      - name: Show applied configuration
+        if: always()
+        shell: bash
+        run: |
+          echo "==> Showing applied configuration..."
+
+          su - testuser -c '
+            export PATH="$HOME/.local/bin:$PATH"
+
+            echo "--- chezmoi status ---"
+            "$HOME/.local/bin/chezmoi" status || true
+
+            echo ""
+            echo "--- Home directory contents ---"
+            ls -la "$HOME" || true
+
+            echo ""
+            echo "--- chezmoi source state ---"
+            "$HOME/.local/bin/chezmoi" state dump || true
+          ' || true
