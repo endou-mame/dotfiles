@@ -14,6 +14,7 @@ path=(
   /usr/sbin
   /bin
   /sbin
+  $HOME/.local/bin
   # NOTE: Windowns 専用: Windows側のコマンド (必要なものだけ)
   /mnt/c/Users/${WIN_USER}/AppData/Local/Programs/Microsoft\ VS\ Code/bin
 )

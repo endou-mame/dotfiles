@@ -1,4 +1,8 @@
 {
+  "env": {
+    "MAX_THINKING_TOKENS": "32000",
+    "CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR": "1"
+  },
   "includeCoAuthoredBy": false,
   "permissions": {
     "allow": [
@@ -54,9 +58,32 @@
       "WebSearch"
     ],
     "deny": [],
-    "ask": []
+    "ask": [
+      "Bash(rm:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(git rebase:*)"
+    ]
   },
   "model": "opus",
+  "statusLine": {
+    "type": "command",
+    "command": "input=$(cat); cwd=$(echo \"$input\" | jq -r '.workspace.current_dir // .cwd'); dir_display=\"${cwd/#$HOME/\\~}\"; git_info=\"\"; if git -C \"$cwd\" rev-parse --git-dir >/dev/null 2>&1; then branch=$(git -C \"$cwd\" branch --show-current 2>/dev/null || echo \"detached\"); status_output=$(git -C \"$cwd\" --no-optional-locks status --porcelain 2>/dev/null); modified=$(echo \"$status_output\" | grep -c \"^ M\" || true); added=$(echo \"$status_output\" | grep -c \"^A\" || true); deleted=$(echo \"$status_output\" | grep -c \"^D\" || true); untracked=$(echo \"$status_output\" | grep -c \"^??\" || true); ahead_behind=$(git -C \"$cwd\" --no-optional-locks rev-list --left-right --count HEAD...@{upstream} 2>/dev/null || echo \"0 0\"); ahead=$(echo \"$ahead_behind\" | awk '{print $1}'); behind=$(echo \"$ahead_behind\" | awk '{print $2}'); git_status=\"\"; [[ $modified -gt 0 ]] && git_status=\"${git_status}~${modified}\"; [[ $added -gt 0 ]] && git_status=\"${git_status}+${added}\"; [[ $deleted -gt 0 ]] && git_status=\"${git_status}x${deleted}\"; [[ $untracked -gt 0 ]] && git_status=\"${git_status}?${untracked}\"; [[ $ahead -gt 0 ]] && git_status=\"${git_status}>${ahead}\"; [[ $behind -gt 0 ]] && git_status=\"${git_status}<${behind}\"; if [[ -n \"$git_status\" ]]; then git_info=$(printf \" \\033[32mgit\\033[0m \\033[33m%s\\033[0m \\033[31m[%s]\\033[0m\" \"$branch\" \"$git_status\"); else git_info=$(printf \" \\033[32mgit\\033[0m \\033[33m%s\\033[0m\" \"$branch\"); fi; fi; printf \"\\033[36m%s\\033[0m%s\" \"$dir_display\" \"$git_info\""
+  },
+  "enabledPlugins": {
+    "document-skills@anthropic-agent-skills": true,
+    "code-review@claude-code-plugins": true,
+    "commit-commands@claude-code-plugins": true,
+    "feature-dev@claude-code-plugins": true,
+    "frontend-design@claude-code-plugins": true,
+    "example-skills@anthropic-agent-skills": true,
+    "cc-helper@cc-plugins": false,
+    "cc-skill-agent-guide@cc-plugins": false,
+    "cc-builder@cc-plugins": true,
+    "cc-optimizer@cc-plugins": true
+  },
+  "outputStyle": "Explanatory",
+  "alwaysThinkingEnabled": true,
   "hooks": {
     "Notification": [
       {
@@ -79,24 +106,57 @@
           }
         ]
       }
+    ],
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/pre-compact.sh"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "WebSearch",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '⚠️ Web 検索時は必ず「2025」を含めること' >&2"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.file_path' | grep -qE '(\\.env|\\.git/|package-lock\\.json|credentials|secrets)' && { echo '⚠️ 保護されたファイルへの編集はブロックされました' >&2; exit 2; } || exit 0"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/restore-context.sh"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.prompt' | grep -qiE '(sk-[a-zA-Z0-9]{20,}|xoxb-|ghp_|AKIA[A-Z0-9]{16})' && { echo '{\"decision\":\"block\",\"reason\":\"⚠️ API キーやトークンが含まれています。1Password などで管理してください。\"}'; exit 0; } || exit 0"
+          }
+        ]
+      }
     ]
-  },
-  "statusLine": {
-    "type": "command",
-    "command": "input=$(cat); cwd=$(echo \"$input\" | jq -r '.workspace.current_dir // .cwd'); dir_display=\"${cwd/#$HOME/\\~}\"; git_info=\"\"; if git -C \"$cwd\" rev-parse --git-dir >/dev/null 2>&1; then branch=$(git -C \"$cwd\" branch --show-current 2>/dev/null || echo \"detached\"); status_output=$(git -C \"$cwd\" --no-optional-locks status --porcelain 2>/dev/null); modified=$(echo \"$status_output\" | grep -c \"^ M\" || true); added=$(echo \"$status_output\" | grep -c \"^A\" || true); deleted=$(echo \"$status_output\" | grep -c \"^D\" || true); untracked=$(echo \"$status_output\" | grep -c \"^??\" || true); ahead_behind=$(git -C \"$cwd\" --no-optional-locks rev-list --left-right --count HEAD...@{upstream} 2>/dev/null || echo \"0 0\"); ahead=$(echo \"$ahead_behind\" | awk '{print $1}'); behind=$(echo \"$ahead_behind\" | awk '{print $2}'); git_status=\"\"; [[ $modified -gt 0 ]] && git_status=\"${git_status}~${modified}\"; [[ $added -gt 0 ]] && git_status=\"${git_status}+${added}\"; [[ $deleted -gt 0 ]] && git_status=\"${git_status}x${deleted}\"; [[ $untracked -gt 0 ]] && git_status=\"${git_status}?${untracked}\"; [[ $ahead -gt 0 ]] && git_status=\"${git_status}>${ahead}\"; [[ $behind -gt 0 ]] && git_status=\"${git_status}<${behind}\"; if [[ -n \"$git_status\" ]]; then git_info=$(printf \" \\033[32mgit\\033[0m \\033[33m%s\\033[0m \\033[31m[%s]\\033[0m\" \"$branch\" \"$git_status\"); else git_info=$(printf \" \\033[32mgit\\033[0m \\033[33m%s\\033[0m\" \"$branch\"); fi; fi; printf \"\\033[36m%s\\033[0m%s\" \"$dir_display\" \"$git_info\""
-  },
-  "enabledPlugins": {
-    "document-skills@anthropic-agent-skills": true,
-    "code-review@claude-code-plugins": true,
-    "commit-commands@claude-code-plugins": true,
-    "feature-dev@claude-code-plugins": true,
-    "frontend-design@claude-code-plugins": true,
-    "example-skills@anthropic-agent-skills": true,
-    "cc-helper@cc-plugins": false,
-    "cc-skill-agent-guide@cc-plugins": false,
-    "cc-builder@cc-plugins": true,
-    "cc-optimizer@cc-plugins": true
-  },
-  "outputStyle": "Explanatory",
-  "alwaysThinkingEnabled": true
+  }
 }

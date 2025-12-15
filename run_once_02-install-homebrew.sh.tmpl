@@ -1,0 +1,47 @@
+#!/bin/bash
+# chezmoi run_once script: Install Homebrew (Linuxbrew)
+# This script runs once per machine
+
+set -eu
+
+echo "==> Setting up Homebrew..."
+
+{{ if eq .chezmoi.os "linux" }}
+
+HOMEBREW_PREFIX="/home/linuxbrew/.linuxbrew"
+
+# Check if Homebrew is already installed
+if [ -x "${HOMEBREW_PREFIX}/bin/brew" ]; then
+    echo "Homebrew is already installed at ${HOMEBREW_PREFIX}"
+else
+    echo "Installing Homebrew..."
+
+    # Install Homebrew
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+    echo "Homebrew installation complete!"
+fi
+
+# Setup Homebrew environment for this script
+if [ -x "${HOMEBREW_PREFIX}/bin/brew" ]; then
+    eval "$(${HOMEBREW_PREFIX}/bin/brew shellenv)"
+fi
+
+# Verify installation
+if command -v brew &> /dev/null; then
+    echo "Homebrew version: $(brew --version | head -1)"
+
+    # Update Homebrew
+    echo "Updating Homebrew..."
+    brew update
+else
+    echo "Warning: Homebrew installation may have failed"
+    exit 1
+fi
+
+{{ else }}
+echo "This script only supports Linux."
+exit 0
+{{ end }}
+
+echo "==> Homebrew setup complete!"

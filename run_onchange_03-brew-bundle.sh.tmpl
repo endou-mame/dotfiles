@@ -1,0 +1,36 @@
+#!/bin/bash
+# chezmoi run_onchange script: Install Homebrew packages via Brewfile
+# This script runs when ~/.Brewfile changes
+#
+# Brewfile hash: {{ include "dot_Brewfile" | sha256sum }}
+
+set -eu
+
+echo "==> Installing Homebrew packages from Brewfile..."
+
+{{ if eq .chezmoi.os "linux" }}
+
+HOMEBREW_PREFIX="/home/linuxbrew/.linuxbrew"
+
+# Setup Homebrew environment
+if [ -x "${HOMEBREW_PREFIX}/bin/brew" ]; then
+    eval "$(${HOMEBREW_PREFIX}/bin/brew shellenv)"
+else
+    echo "Error: Homebrew is not installed"
+    exit 1
+fi
+
+# Run brew bundle with global Brewfile
+if [ -f "${HOME}/.Brewfile" ]; then
+    echo "Running brew bundle..."
+    brew bundle --global
+else
+    echo "Warning: ~/.Brewfile not found, skipping brew bundle"
+fi
+
+{{ else }}
+echo "This script only supports Linux."
+exit 0
+{{ end }}
+
+echo "==> Homebrew packages installation complete!"
