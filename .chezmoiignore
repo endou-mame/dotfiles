@@ -16,6 +16,8 @@
 .claude/.credentials.json
 .claude/.update.lock
 .claude/history.jsonl
+.claude/stats-cache.json
+.claude/telemetry
 
 .config/zsh/.zcompcache/
 .config/zsh/.zcompdump
