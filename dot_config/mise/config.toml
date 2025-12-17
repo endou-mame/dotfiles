@@ -1,5 +1,6 @@
 [tools]
-node = "24"
+go = "latest"
+node = "lts"
 php = "8.5"
 python = "latest"
 uv = "latest"
