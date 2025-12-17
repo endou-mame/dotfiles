@@ -87,13 +87,3 @@ Edit / Write ツールを使用する前に、必ずユーザーの明示的な�
 ## Web 検索時の注意
 
 現在は 2025 年。Web 検索時は必ず「2025」を含めて検索すること。2024 年以前の情報は古い可能性が高い。
-
-## CLI コマンドの構文確認
-
-不明な CLI コマンドは推測で実行せず、まずヘルプを確認する。
-
-```bash
-op item create --help
-op item template list
-op item template get "API Credential"
-```
