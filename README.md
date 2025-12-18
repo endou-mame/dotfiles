@@ -27,7 +27,7 @@ WSL2 (Linux) 環境向けに設計された dotfiles で、複数の Linux デ�
 ## インストール
 
 ```sh
-sh -c "$(curl -fsLS get.chezmoi.io)" -- -b $HOME/.local/bin init --apply endou-mame
+sh -c "$(curl -fsLS get.chezmoi.io)" -- -b $HOME/.local/bin init --apply git@github.com:endou-mame/dotfiles.git
 ```
 
 このコマンドで以下が自動実行されます:
@@ -43,9 +43,9 @@ sh -c "$(curl -fsLS get.chezmoi.io)" -- -b $HOME/.local/bin init --apply endou-m
 
 | ツール | 説明 |
 |--------|------|
-| ZSH | メインシェル。ZDOTDIR で `~/.config/zsh/` に設定を集約 |
-| Starship | カスタマイズ可能なプロンプト |
-| Sheldon | ZSH プラグイン管理（遅延読み込み対応） |
+| ZSH | メインシェル。ZDOTDIR で [`~/.config/zsh/`](./dot_config/zsh/) に設定を集約 |
+| Starship | カスタマイズ可能なプロンプト [`~/.config/starship.toml`](./dot_config/starship.toml) |
+| Sheldon | ZSH プラグイン管理（遅延読み込み対応） [`~/.config/sheldon/plugins.toml`](./dot_config/sheldon/plugins.toml) |
 
 ZSH プラグイン:
 
@@ -55,6 +55,8 @@ ZSH プラグイン:
 - zsh-syntax-highlighting: シンタックスハイライト
 
 ### CLI ツール（Homebrew）
+
+[`~/.Brewfile`](./dot_Brewfile)
 
 | ツール | 説明 |
 |--------|------|
@@ -69,6 +71,8 @@ ZSH プラグイン:
 
 ### ランタイム管理（mise）
 
+[`~/.config/mise/config.toml`](./dot_config/mise/config.toml)
+
 | ランタイム | バージョン |
 |------------|------------|
 | Node.js | 24 |
@@ -77,6 +81,8 @@ ZSH プラグイン:
 | uv | latest |
 
 ### Claude Code
+
+[`~/.claude/`](./dot_claude/)
 
 | 設定 | 説明 |
 |------|------|
@@ -88,11 +94,15 @@ ZSH プラグイン:
 
 ### Git
 
+[`~/.gitconfig`](./dot_gitconfig)
+
 - merge: fast-forward 禁止（マージコミットを明示的に作成）
 - pull: fast-forward のみ許可
 - デフォルトブランチ: main
 
 ### テキスト校正（textlint）
+
+[`~/.textlintrc`](./dot_textlintrc)
 
 日本語技術文書向けルール:
 
@@ -151,9 +161,11 @@ chezmoi cd           # ソースディレクトリへ移動
 chezmoi re-add       # 変更したファイルを再追加
 ```
 
-## カスタム関数
+## カスタム関数 ([`~/.zshrc`](./dot_config/zsh/dot_zshrc) にて定義)
 
 ### gitls
+
+[`~/.zshrc`](./dot_config/zsh/dot_zshrc#117)
 
 ghq で管理しているリポジトリを fzf で選択して移動:
 
@@ -163,6 +175,8 @@ gitls
 
 ### gitget
 
+[`~/.zshrc`](./dot_config/zsh/dot_zshrc#126)
+
 リポジトリを ghq get して自動的に移動:
 
 ```sh
@@ -170,6 +184,8 @@ gitget https://github.com/user/repo
 ```
 
 ### gitrm
+
+[`~/.zshrc`](./dot_config/zsh/dot_zshrc#136)
 
 ghq リポジトリを安全に削除（未コミット/未プッシュの変更がある場合は警告）:
 
@@ -179,6 +195,8 @@ gitrm
 
 ### brew（ラッパー）
 
+[`~/.zshrc`](./dot_config/zsh/dot_zshrc#90)
+
 `brew install` / `brew uninstall` 時に Brewfile を自動更新し、chezmoi に反映:
 
 ```sh
@@ -187,6 +205,8 @@ brew uninstall <package>
 ```
 
 ## CI
+
+[test.yml](./.github/workflows/test.yml)
 
 GitHub Actions で以下のディストリビューションでの dotfiles 適用をテスト:
 

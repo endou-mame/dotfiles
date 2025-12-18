@@ -1,0 +1,72 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+format = """\
+╭╴\
+$os$username$hostname$localip$shlvl$singularity$kubernetes$nats$custom$directory$vcsh$fossil_branch$fossil_metrics$git_branch$git_commit$git_state$git_metrics$git_status$hg_branch$hg_state$pijul_channel$docker_context$package$bun$c$cmake$cobol$cpp$daml$dart$deno$dotnet$elixir$elm$erlang$fennel$fortran$gleam$golang$gradle$haskell$haxe$helm$java$julia$kotlin$lua$mojo$nim$nodejs$ocaml$odin$opa$perl$php$pulumi$purescript$python$quarto$raku$rlang$red$ruby$rust$scala$solidity$swift$terraform$typst$vlang$vagrant$xmake$zig$buf$guix_shell$nix_shell$conda$pixi$meson$spack$memory_usage$aws$gcloud$openstack$azure$direnv$env_var$mise$crystal$sudo\
+$fill $cmd_duration$time\
+$line_break$jobs$battery$status$container$netns$shell\
+╰─$character\
+"""
+
+[character]
+success_symbol = "[](bold green)"
+error_symbol = "[](bold red)"
+
+[fill]
+symbol = " "
+
+[time]
+disabled = false
+
+[os]
+format = "$symbol "
+disabled = false
+
+[os.symbols]
+Windows = "[󰍲](#0078D6)"
+Ubuntu = "[󰕈](#E95420)"
+SUSE = "[](#73BA25)"
+Raspbian = "[󰐿](#C51A4A)"
+Mint = "[󰣭](#87CF3E)"
+Macos = "[󰀵](#A2AAAD)"
+Manjaro = "[](#35BF5C)"
+Linux = "[󰌽](#FCC624)"
+Gentoo = "[󰣨](#54487A)"
+Fedora = "[󰣛](#51A2DA)"
+Alpine = "[](#0D597F)"
+Amazon = "[](#FF9900)"
+Android = "[](#3DDC84)"
+AOSC = "[](#4B9ED7)"
+Arch = "[󰣇](#1793D1)"
+Artix = "[󰣇](#1793D1)"
+EndeavourOS = "[](#7F3FBF)"
+CentOS = "[](#932178)"
+Debian = "[󰣚](#A80030)"
+Redhat = "[󱄛](#EE0000)"
+RedHatEnterprise = "[󱄛](#EE0000)"
+Pop = "[](#48B9C7)"
+
+[directory]
+truncation_length = 0
+
+[git_branch]
+format = "on [$symbol$branch(:$remote_branch)]($style)"
+
+[git_status]
+format = "[(*$conflicted$untracked$modified$staged$renamed$deleted)](bold red)[( \\[$ahead_behind\\])]($style) "
+style = "bold red"
+conflicted = ""
+untracked = ""
+modified = "​"
+staged = "​"
+renamed = "​"
+deleted = "​"
+ahead = '0↓|${count}↑'
+behind = '${count}↓|0↑'
+diverged = '${behind_count}↓|${ahead_count}↑'
+
+[custom.git_repo]
+when = true
+require_repo = true
+command = 'basename $(dirname $(git rev-parse --show-toplevel))'
+format = '[$output ](bold blue)[> ](bold)'
