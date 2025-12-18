@@ -33,8 +33,8 @@ sh -c "$(curl -fsLS get.chezmoi.io)" -- -b $HOME/.local/bin init --apply git@git
 このコマンドで以下が自動実行されます:
 
 1. システムパッケージのインストール（curl, git, neovim, zsh, docker など）
-2. Homebrew (Linuxbrew) のインストール
-3. Brewfile に基づくパッケージのインストール
+2. [Homebrew (Linuxbrew)](https://docs.brew.sh/Homebrew-on-Linux) のインストール
+3. [`~/.Brewfile`](./dot_Brewfile) に基づくパッケージのインストール
 4. 設定ファイルの配置
 
 ## 含まれる設定
