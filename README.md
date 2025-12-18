@@ -165,7 +165,7 @@ chezmoi re-add       # 変更したファイルを再追加
 
 ### gitls
 
-[`~/.zshrc`](./dot_config/zsh/dot_zshrc#117)
+[`~/.zshrc`](./dot_config/zsh/dot_zshrc#L117)
 
 ghq で管理しているリポジトリを fzf で選択して移動:
 
@@ -175,7 +175,7 @@ gitls
 
 ### gitget
 
-[`~/.zshrc`](./dot_config/zsh/dot_zshrc#126)
+[`~/.zshrc`](./dot_config/zsh/dot_zshrc#L126)
 
 リポジトリを ghq get して自動的に移動:
 
@@ -185,7 +185,7 @@ gitget https://github.com/user/repo
 
 ### gitrm
 
-[`~/.zshrc`](./dot_config/zsh/dot_zshrc#136)
+[`~/.zshrc`](./dot_config/zsh/dot_zshrc#L136)
 
 ghq リポジトリを安全に削除（未コミット/未プッシュの変更がある場合は警告）:
 
@@ -195,7 +195,7 @@ gitrm
 
 ### brew（ラッパー）
 
-[`~/.zshrc`](./dot_config/zsh/dot_zshrc#90)
+[`~/.zshrc`](./dot_config/zsh/dot_zshrc#L90)
 
 `brew install` / `brew uninstall` 時に Brewfile を自動更新し、chezmoi に反映:
 
