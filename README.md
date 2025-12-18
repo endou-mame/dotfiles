@@ -6,10 +6,10 @@ WSL2 (Linux) 環境向けに設計された dotfiles で、複数の Linux デ�
 
 ## 特徴
 
-- chezmoi によるクロスプラットフォーム dotfiles 管理
+- [chezmoi](https://www.chezmoi.io/) によるクロスプラットフォーム dotfiles 管理
 - 複数の Linux ディストリビューションに対応（Arch, Ubuntu, Debian, Fedora, openSUSE）
-- ZSH + Sheldon + Starship によるモダンなシェル環境
-- mise によるランタイムバージョン管理
+- [ZSH](https://www.zsh.org/) + [sheldon](https://sheldon.cli.rs/) + [Starship](https://starship.rs/) によるモダンなシェル環境
+- [mise](https://mise.jdx.dev/) によるランタイムバージョン管理
 - WSL2 環境に最適化（Windows 通知連携、VSCode パス自動追加）
 - Claude Code のカスタムフック・コマンド・ルール
 - GitHub Actions による複数ディストロでの自動テスト
@@ -35,47 +35,55 @@ sh -c "$(curl -fsLS get.chezmoi.io)" -- -b $HOME/.local/bin init --apply git@git
 1. システムパッケージのインストール（curl, git, neovim, zsh, docker など）
 2. [Homebrew (Linuxbrew)](https://docs.brew.sh/Homebrew-on-Linux) のインストール
 3. [`~/.Brewfile`](./dot_Brewfile) に基づくパッケージのインストール
-4. 設定ファイルの配置
+4. 各種設定ファイルの配置
 
 ## 含まれる設定
 
 ### シェル環境
 
+| ツール | 説明 | 設定ファイル |
+|--------|------|-------|
+| [ZSH](https://www.zsh.org/) | メインシェル | [`~/.config/zsh/`](./dot_config/zsh/) |
+| [Starship](https://starship.rs/) | シェル用プロンプト | [`~/.config/starship.toml`](./dot_config/starship.toml) |
+| [sheldon](https://sheldon.cli.rs/) | ZSH プラグイン管理（遅延読み込み対応） | [`~/.config/sheldon/plugins.toml`](./dot_config/sheldon/plugins.toml) |
+
+### ZSH プラグイン（by sheldon）
+
+[`~/.config/sheldon/plugins.toml`](./dot_config/sheldon/plugins.toml)
+
 | ツール | 説明 |
 |--------|------|
-| ZSH | メインシェル。ZDOTDIR で [`~/.config/zsh/`](./dot_config/zsh/) に設定を集約 |
-| Starship | カスタマイズ可能なプロンプト [`~/.config/starship.toml`](./dot_config/starship.toml) |
-| Sheldon | ZSH プラグイン管理（遅延読み込み対応） [`~/.config/sheldon/plugins.toml`](./dot_config/sheldon/plugins.toml) |
+| [zsh-completions](https://github.com/zsh-users/zsh-completions) | 補完拡張 |
+| [zsh-autosuggestions](https://github.com/zsh-users/zsh-autosuggestions) | コマンド提案 |
+| [fzf-tab](https://github.com/Aloxaf/fzf-tab) | fzf による補完 |
+| [zsh-syntax-highlighting](https://github.com/zsh-users/zsh-syntax-highlighting) | シンタックスハイライト |
 
-ZSH プラグイン:
-
-- zsh-completions: 補完拡張
-- zsh-autosuggestions: コマンド提案
-- fzf-tab: fzf による補完
-- zsh-syntax-highlighting: シンタックスハイライト
-
-### CLI ツール（Homebrew）
+### CLI ツール（by Homebrew）
 
 [`~/.Brewfile`](./dot_Brewfile)
 
 | ツール | 説明 |
 |--------|------|
-| bat | シンタックスハイライト付き cat |
-| eza | モダンな ls 代替 |
-| fzf | fuzzy finder |
-| ghq | Git リポジトリ管理 |
-| gh | GitHub CLI |
-| fastfetch | システム情報表示 |
-| jq | JSON プロセッサ |
-| dive | Docker イメージ解析 |
+| [bat](https://github.com/sharkdp/bat) | シンタックスハイライト付き cat |
+| [eza](https://github.com/eza-community/eza) | モダンな ls 代替 |
+| [fzf](https://github.com/junegunn/fzf) | fuzzy finder |
+| [ghq](https://github.com/x-motemen/ghq) | Git リポジトリ管理 |
+| [gh](https://cli.github.com/) | GitHub CLI |
+| [fastfetch](https://github.com/fastfetch-cli/fastfetch) | システム情報表示 |
+| [jq](https://github.com/jqlang/jq) | JSON プロセッサ |
+| [dive](https://github.com/wagoodman/dive) | Docker イメージ解析 |
+| mise | プログラミング言語、開発ツールのバージョン管理 |
+| sheldon | ZSHプラグイン管理 |
+| starship | シェル用プロンプト |
+| claude-code | Claude コーディングエージェント |
 
-### ランタイム管理（mise）
+### ランタイム管理（by mise）
 
 [`~/.config/mise/config.toml`](./dot_config/mise/config.toml)
 
 | ランタイム | バージョン |
 |------------|------------|
-| Node.js | 24 |
+| Node.js | lts |
 | PHP | 8.5 |
 | Python | latest |
 | uv | latest |
