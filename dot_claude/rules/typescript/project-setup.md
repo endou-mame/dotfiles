@@ -4,24 +4,24 @@ paths:
   - package.json
 ---
 
-# TypeScript プロジェクトセットアップ
+# TypeScript Project Setup
 
-## 手順
+## Steps
 
 ```bash
-# 1. ディレクトリ作成 & 移動
+# 1. Create & Move to Directory
 mkdir <repo-name> && cd <repo-name>
 
-# 2. Git 初期化
+# 2. Initialize Git
 git init
 
-# 3. npm 初期化
+# 3. Initialize npm
 npm init -y
 
-# 4. TypeScript 設定ファイル生成
+# 4. Generate TypeScript Config File
 npx tsc --init
 
-# 5. 設定ファイル作成（後述の内容で作成）
+# 5. Create Configuration Files (as described below)
 #    - .oxfmtrc.json
 #    - .oxlintrc.json
 #    - lefthook.yml
@@ -29,19 +29,19 @@ npx tsc --init
 #    - .github/workflows/deploy.yml
 #    - .gitignore
 
-# 6. パッケージ一括インストール
+# 6. Install Packages in Bulk
 npm install -D oxfmt oxlint oxlint-tsgolint textlint textlint-rule-preset-ja-spacing @textlint/textlint-plugin-text lefthook typescript vitest
 
-# 7. lefthook 初期化
+# 7. Initialize lefthook
 npx lefthook install
 
-# 8. GitHub リポジトリ作成 & push
+# 8. Create GitHub Repository & Push
 gh repo create <repo-name> --private --source=. --push
 ```
 
 ## .oxfmtrc.json
 
-Prettier 互換の設定。シングルクォート、printWidth: 80 を使用:
+Prettier compatible configuration. Uses single quotes and printWidth: 80:
 
 ```json
 {
@@ -57,12 +57,12 @@ Prettier 互換の設定。シングルクォート、printWidth: 80 を使用:
 
 ## .oxlintrc.json
 
-oxlint Alpha から `--type-aware --type-check` オプションが追加され、`tsc --noEmit && eslint` を 1 コマンドに統合できるようになった。
+With the addition of the `--type-aware --type-check` options in oxlint Alpha, it is now possible to integrate `tsc --noEmit && eslint` into a single command.
 
-- `--type-aware`: TypeScript の型情報を使った lint ルール（`@typescript-eslint` 相当）を有効化
-- `--type-check`: `tsc --noEmit` 相当の型チェックを同時実行
+- `--type-aware`: Enables lint rules that use TypeScript's type information (equivalent to `@typescript-eslint`).
+- `--type-check`: Concurrently executes type checking equivalent to `tsc --noEmit`.
 
-基本的なルール設定。デフォルトで十分な場合は省略可能:
+Basic rule configuration. Can be omitted if defaults are sufficient:
 
 ```json
 {
@@ -77,9 +77,9 @@ oxlint Alpha から `--type-aware --type-check` オプションが追加され�
 }
 ```
 
-## tsconfig.json 変更箇所
+## tsconfig.json Modifications
 
-`npx tsc --init` 実行後、以下を設定:
+After running `npx tsc --init`, set the following:
 
 ```json
 {
@@ -138,7 +138,7 @@ pre-push:
 }
 ```
 
-## GitHub Actions（Cloudflare Workers デプロイ）
+## GitHub Actions (Cloudflare Workers Deployment)
 
 `.github/workflows/deploy.yml`:
 
@@ -193,4 +193,4 @@ dist/
 
 ## Git hooks
 
-Git hooks には lefthook を使う。husky は使わない。
+Uses lefthook for Git hooks. Does not use Husky.

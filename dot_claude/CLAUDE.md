@@ -1,89 +1,77 @@
-# グローバル開発ガイドライン
+# Global Development Guidelines
 
-## 言語設定
+## Language Settings
 
-- 会話: 日本語で応答する
-- コミットメッセージ: 日本語で記述し、「なぜ」変更したかを重視する
+- Conversation: Respond in Japanese.
+- Commit Messages: Write in Japanese, emphasizing "why" the change was made.
 
-## ファイル命名規則
+# Core Principles
 
-- ファイル名・ディレクトリ名は英語（ASCII 文字）のみを使用する
-- 日本語や全角文字をファイル名に含めない
+* Follow Kent Beck's Test-Driven Development (`tdd` skill) and Tidy First (`tidying` skill) methodologies as the preferred approach for all development work.
+* Document at the right layer: Code → How, Tests → What, Commits → Why, Comments → Why not
+* Keep documentation up to date with code changes
 
-## 記法ルール
+## Subagent Utilization Policy
 
-- 太字 (`**text**`) を使わず、読みやすい文章を書く
-- コード内にコメントを書かない。設定ファイルの説明コメントも不要
+Actively utilize Subagents to save context. The main agent will act as an orchestrator, delegating actual work to Subagents.
 
-## ファイル編集・作成の許可
+### Basic Rules
 
-Edit / Write ツールを使用する前に、必ずユーザーの明示的な許可を得ること。「〜しましょう」「〜に置け」などの発言は場所の指定であり、編集の許可ではない。「編集していい」「書いて」「作成して」など、明確な許可を確認してから実行する。
+- As soon as two or more independent tasks arise, immediately delegate them to a Subagent using the Task tool.
+- Independent tasks must always be executed in parallel (multiple Task tool calls in a single message).
+- Specify `model: opus` for Subagents.
+- Leverage background execution (`run_in_background: true`) to run multiple Subagents concurrently.
+- Collect the results from Subagents using `TaskOutput` and report them in an integrated manner.
 
-## コミット・プッシュ
+### Tasks Suitable for Subagent Delegation
 
-指示された作業が完了したら、ユーザーに確認を求める。確認が OK であれば、コミットまで行う。git push は必ずユーザーの承認後に実行する。
+| Category        | Example Tasks                                       |
+|-----------------|-----------------------------------------------------|
+| Code Exploration| File search, pattern search, architecture investigation |
+| Implementation  | Feature addition, bug fixing, refactoring           |
+| Testing         | Test execution, test correction, coverage check     |
+| Documentation   | README updates, API documentation creation          |
+| Debugging       | Error investigation, log analysis, cause identification |
+| Research        | Technology research, library comparison, best practice research |
+| Web Search      | Gathering latest information, checking documentation, searching for error solutions |
 
-## Subagent 活用ポリシー
-
-コンテキスト節約のため、Subagent を積極活用する。メインエージェントはオーケストレーターとして振る舞い、実作業は Subagent に委譲する。
-
-### 基本ルール
-
-- 2 つ以上の独立したタスクが発生したら、即座に Task ツールで Subagent に委譲する
-- 独立したタスクは必ず並列実行する（単一メッセージで複数の Task ツール呼び出し）
-- Subagent には `model: opus` を指定する
-- バックグラウンド実行（`run_in_background: true`）を活用し、複数 Subagent を同時稼働させる
-- Subagent の結果は `TaskOutput` で回収して統合報告する
-
-### Subagent に委譲すべきタスク
-
-| カテゴリ     | タスク例                                         |
-| ------------ | ------------------------------------------------ |
-| コード探索   | ファイル検索、パターン検索、アーキテクチャ調査   |
-| 実装         | 機能追加、バグ修正、リファクタリング             |
-| テスト       | テスト実行、テスト修正、カバレッジ確認           |
-| ドキュメント | README 更新、API ドキュメント作成                |
-| デバッグ     | エラー調査、ログ分析、原因特定                   |
-| リサーチ     | 技術調査、ライブラリ比較、ベストプラクティス調査 |
-| Web 検索     | 最新情報収集、ドキュメント確認、エラー解決策検索 |
-
-### 並列実行の例
+### Example of Parallel Execution
 
 ```
-ユーザー: 「テストを修正して、ドキュメントも更新して」
+User: "Fix the tests and update the documentation."
 
-→ 並列で 2 つの Task を起動:
-  - Task 1: テスト修正（model: opus, run_in_background: true）
-  - Task 2: ドキュメント更新（model: opus, run_in_background: true）
-→ TaskOutput で結果を回収
-→ 統合して報告
+→ Launch two Tasks in parallel:
+  - Task 1: Fix tests (model: opus, run_in_background: true)
+  - Task 2: Update documentation (model: opus, run_in_background: true)
+→ Collect results using TaskOutput
+→ Integrate and report
 ```
 
 ```
-ユーザー: 「React 19 の新機能と、現在のコードベースでの使用箇所を調べて」
+User: "Investigate the new features of React 19 and where they are used in the current codebase."
 
-→ 並列で 2 つの Task を起動:
-  - Task 1: Web 検索で React 19 の新機能を調査
-  - Task 2: コードベースで React 関連の実装を探索
-→ 両方の結果を統合して報告
+→ Launch two Tasks in parallel:
+  - Task 1: Research new features of React 19 using Web Search
+  - Task 2: Explore React-related implementations in the codebase
+→ Integrate and report results from both tasks
 ```
 
-### メインエージェントの役割
+### Role of the Main Agent
 
-- タスクの分解と Subagent への割り振り
-- 結果の統合と最終報告
-- ユーザーとのコミュニケーション
-- 全体の進捗管理
+- Decompose tasks and assign them to Subagents.
+- Integrate results and provide the final report.
+- Communicate with the user.
+- Manage overall progress.
 
-細かいファイル操作やコード変更は自分で行わず、Subagent に任せる。
+Do not perform fine-grained file operations or code modifications yourself; leave them to Subagents.
 
-## ハルシネーション防止
+## Hallucination Prevention
 
-- 機能について言及する前にコードを確認する。不確かな場合は「確認します」と言ってから調べる。
-- URL を勝手に作り出さない。テストにはユーザーが提供した URL のみ使用する。
-- 外部 URL をユーザーに提案する前に、必ず WebFetch でアクセスして存在と動作を確認する。検索結果に出てきただけでは不十分。401/403/404 エラーが返った URL は提案しない。
-- API コールは必要最小限に。1 回のテストで確認できたら追加テストは不要。ユーザーは API 料金を払っている。
+- Before mentioning a feature, confirm it in the code. If uncertain, say "I will check" and then investigate.
+- Do not invent URLs. Only use URLs provided by the user for testing.
+- Before suggesting external URLs to the user, always access them via WebFetch to confirm their existence and functionality. Search results alone are insufficient. Do not suggest URLs that return 401/403/404 errors.
+- Minimize API calls. If a single test can confirm something, no further tests are needed. Users pay for API usage.
 
-## Web 検索時の注意
+## Precautions for Web Searches
 
-現在は 2025 年。Web 検索時は必ず「2025」を含めて検索すること。2024 年以前の情報は古い可能性が高い。
+It is currently 2025. When performing web searches, always include "2025" in the search query. Information from 2024 or earlier is likely to be outdated.
