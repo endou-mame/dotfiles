@@ -34,3 +34,12 @@ export FZF_DEFAULT_OPTS="
   --layout=reverse
   --border
 "
+
+export EZA_DEFAULT_PARAMS=(
+  '--git'
+  '--group'
+  '--group-directories-first'
+  '--time-style=long-iso'
+  '--color-scale=all'
+  '--icons'
+)

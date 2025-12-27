@@ -9,8 +9,13 @@ set -eu
 echo "==> Installing Homebrew packages from Brewfile..."
 
 {{ if eq .chezmoi.os "linux" }}
-
 HOMEBREW_PREFIX="/home/linuxbrew/.linuxbrew"
+{{ if eq .chezmoi.os "darwin" }}
+HOMEBREW_PREFIX="/opt/homebrew"
+{{ else }}
+echo "This script only supports macOS and Linux."
+exit 0
+{{ end }}
 
 # Setup Homebrew environment
 if [ -x "${HOMEBREW_PREFIX}/bin/brew" ]; then
@@ -23,14 +28,9 @@ fi
 # Run brew bundle with global Brewfile
 if [ -f "${HOME}/.Brewfile" ]; then
     echo "Running brew bundle..."
-    brew bundle --global
+    brew bundle --global --cleanup --force
 else
     echo "Warning: ~/.Brewfile not found, skipping brew bundle"
 fi
-
-{{ else }}
-echo "This script only supports Linux."
-exit 0
-{{ end }}
 
 echo "==> Homebrew packages installation complete!"

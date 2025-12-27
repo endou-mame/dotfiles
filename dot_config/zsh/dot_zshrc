@@ -68,15 +68,15 @@ bindkey "^[[F" end-of-line
 # エイリアス
 # =============================================================================
 # eza settings
-# https://github.com/z-shell/zsh-eza
-alias ls='eza $eza_params'
-alias l='eza --git-ignore $eza_params'
-alias ll='eza --all --header --long $eza_params'
-alias llm='eza --all --header --long --sort=modified $eza_params'
+# https://github.com/eza-community/eza
+alias ls='eza $EZA_DEFAULT_PARAMS'
+alias l='eza --git-ignore $EZA_DEFAULT_PARAMS'
+alias ll='eza --all --header --long $EZA_DEFAULT_PARAMS'
+alias llm='eza --all --header --long --sort=modified $EZA_DEFAULT_PARAMS'
 alias la='eza -lbhHigUmuSa'
 alias lx='eza -lbhHigUmuSa@'
-alias lt='eza --tree $eza_params'
-alias tree='eza --tree $eza_params'
+alias lt='eza --tree $EZA_DEFAULT_PARAMS'
+alias tree='eza --tree $EZA_DEFAULT_PARAMS'
 
 # bat settings
 # https://github.com/sharkdp/bat
@@ -86,34 +86,45 @@ alias cat="bat --theme-dark default --theme-light GitHub"
 # 関数
 # =============================================================================
 
-# brew install/uninstall 時に Brewfile を自動更新
-function brew() {
-    command brew "$@"
-    local exit_code=$?
+# -----------------------------------------------------------------------------
+# brew 関数（install/uninstall 時に Brewfile 自動更新）
+# -----------------------------------------------------------------------------
+if command -v brew &> /dev/null; then
+    function brew() {
+        command brew "$@"
+        local exit_code=$?
 
-    case "$1" in
-        install|uninstall|remove)
-            if [[ $exit_code -eq 0 ]]; then
-                echo "📦 Brewfile を更新中..."
-                command brew bundle dump --file=~/.Brewfile --force
-                if command -v chezmoi &>/dev/null; then
-                    chezmoi add ~/.Brewfile
-                    echo "✅ chezmoi に反映しました"
+        case "$1" in
+            install|uninstall|remove)
+                if [[ $exit_code -eq 0 ]]; then
+                    echo "Brewfile を更新中..."
+                    command brew bundle dump --file=~/.Brewfile --force
+                    if command -v chezmoi &>/dev/null; then
+                        chezmoi add ~/.Brewfile
+                        chezmoi git -- add dot_Brewfile
+                        chezmoi git -- commit -m "Brewfile: $1 ${@:2}"
+                        chezmoi git -- push
+                        echo "chezmoi に反映しました"
+                    fi
                 fi
-            fi
-            ;;
-    esac
+                ;;
+        esac
 
-    return $exit_code
-}
+        return $exit_code
+    }
+fi
 
+# -----------------------------------------------------------------------------
 # NOTE: ghq + fzf + eza Gitリポジトリ管理
 # 共通: fzf でリポジトリ選択
+# -----------------------------------------------------------------------------
 function _ghq-fzf_select() {
   ghq list | fzf --preview "eza -l -g -a --icons $(ghq root)/{} | tail -n+4 | awk '{print \$6\"/\"\$8\" \"\$9 \" \" \$10}'"
 }
 
+# -----------------------------------------------------------------------------
 # 参照→移動
+# -----------------------------------------------------------------------------
 function gitls() {
   local src=$(_ghq-fzf_select)
   if [ -n "$src" ]; then
@@ -122,7 +133,9 @@ function gitls() {
 }
 compdef _nothing gitls
 
+# -----------------------------------------------------------------------------
 # 取得→移動
+# -----------------------------------------------------------------------------
 function gitget() {
   if [ -z "$1" ]; then
     echo "Usage: gitget <repository>"
@@ -132,7 +145,9 @@ function gitget() {
 }
 compdef _nothing gitget
 
+# -----------------------------------------------------------------------------
 # 参照→削除
+# -----------------------------------------------------------------------------
 function gitrm() {
   # 最初に ghq root を取得（後でカレントディレクトリが無効になる前に）
   local ghq_root="$(ghq root)"
