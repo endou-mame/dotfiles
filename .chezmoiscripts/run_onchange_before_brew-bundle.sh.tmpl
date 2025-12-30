@@ -1,21 +1,14 @@
 #!/bin/bash
-# chezmoi run_onchange script: Install Homebrew packages via Brewfile
-# This script runs when ~/.Brewfile changes
-#
+
 # Brewfile hash: {{ include "dot_Brewfile" | sha256sum }}
 
-set -eu
+set -euo pipefail
 
+{{ if lookPath "brew" -}}
 echo "==> Installing Homebrew packages from Brewfile..."
 
-{{ if eq .chezmoi.os "linux" }}
-HOMEBREW_PREFIX="/home/linuxbrew/.linuxbrew"
-{{ if eq .chezmoi.os "darwin" }}
-HOMEBREW_PREFIX="/opt/homebrew"
-{{ else }}
-echo "This script only supports macOS and Linux."
-exit 0
-{{ end }}
+# Setup Homebrew environment
+test -d /home/linuxbrew/.linuxbrew && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
 # Setup Homebrew environment
 if [ -x "${HOMEBREW_PREFIX}/bin/brew" ]; then
@@ -34,3 +27,4 @@ else
 fi
 
 echo "==> Homebrew packages installation complete!"
+{{ end -}}

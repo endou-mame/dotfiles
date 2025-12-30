@@ -1,0 +1,24 @@
+{{- if hasKey . "name" -}}
+{{-   $name = .name -}}
+{{- else -}}
+{{-   $name := promptStringOnce . "name" "What is your name" -}}
+{{- end -}}
+
+{{- if hasKey . "email" -}}
+{{-   $email = .email -}}
+{{- else -}}
+{{-   $email := promptStringOnce . "email" "What is your email address" -}}
+{{- end -}}
+
+{{ $sourceDir = "~/ghq/github.com/$name" }}
+{{- if hasKey . "sourceDir" -}}
+{{-   $sourceDir = .sourceDir -}}
+{{- else -}}
+{{-   $sourceDir := promptStringOnce . "sourceDir" "What is your sourceDir" -}}
+{{- end -}}
+
+sourceDir = {{ $sourceDir }}
+
+[data]
+    name = {{ $name | quote }}
+    email = {{ $email | quote }}

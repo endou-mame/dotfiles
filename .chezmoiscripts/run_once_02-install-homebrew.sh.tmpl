@@ -1,0 +1,26 @@
+#!/bin/bash
+# chezmoi run_once script: Install Homebrew
+# This script runs once per machine
+
+set -euo pipefail
+
+echo "==> Setting up Homebrew..."
+
+echo "Installing Homebrew..."
+
+# Install Homebrew
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+echo "Homebrew installation complete!"
+
+# Setup Homebrew environment
+test -d /home/linuxbrew/.linuxbrew && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+# Verify installation
+echo "Homebrew version: $(brew --version | head -1)"
+
+# Update Homebrew
+echo "Updating Homebrew..."
+brew update --force --quiet
+
+echo "==> Homebrew setup complete!"
