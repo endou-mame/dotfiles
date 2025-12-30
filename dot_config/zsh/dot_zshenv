@@ -25,16 +25,6 @@ path=(
 # =============================================================================
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
-# =============================================================================
-# fzf (汎用的なコマンドライン fuzzy finder)
-# https://github.com/junegunn/fzf
-# =============================================================================
-export FZF_DEFAULT_OPTS="
-  --height 50%
-  --layout=reverse
-  --border
-"
-
 export EZA_DEFAULT_PARAMS=(
   '--git'
   '--group'
