@@ -19,12 +19,6 @@ path=(
   /mnt/c/Users/${WIN_USER}/AppData/Local/Programs/Microsoft\ VS\ Code/bin
 )
 
-# =============================================================================
-# Linuxbrew (Homebrew for Linux)
-# https://docs.brew.sh/Homebrew-on-Linux
-# =============================================================================
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-
 export EZA_DEFAULT_PARAMS=(
   '--git'
   '--group'
