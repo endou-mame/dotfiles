@@ -92,8 +92,12 @@ jobs:
 
             # Initialize and apply dotfiles from local source
             # --exclude=scripts skips run_once scripts (Docker/Homebrew install) in CI
+            # --promptString provides values for interactive prompts (no TTY in CI)
             echo "Applying dotfiles from local source..."
-            "$HOME/.local/bin/chezmoi" init --apply --source "$HOME/.local/share/chezmoi" --exclude=scripts
+            "$HOME/.local/bin/chezmoi" init --apply --source "$HOME/.local/share/chezmoi" \
+              --exclude=scripts \
+              --promptString "name=testuser" \
+              --promptString "email=test@example.com"
 
             echo "==> chezmoi init --apply completed successfully!"
           '
