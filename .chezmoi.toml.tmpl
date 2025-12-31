@@ -1,16 +1,5 @@
-{{- $name := "endou-mame" -}}
-{{- if hasKey . "name" -}}
-{{-   $name = .name -}}
-{{- else -}}
-{{-   $name = promptStringOnce . "name" "What is your name" -}}
-{{- end -}}
-
-{{- $email := "1125katanohimeji0521@gmail.com" -}}
-{{- if hasKey . "email" -}}
-{{-   $email = .email -}}
-{{- else -}}
-{{-   $email = promptStringOnce . "email" "What is your email address" -}}
-{{- end -}}
+{{- $name := promptStringOnce . "name" "What is your name" "endou-mame" -}}
+{{- $email := promptStringOnce . "email" "What is your email address" "1125katanohimeji0521@gmail.com" -}}
 
 sourceDir = {{ printf "~/ghq/github.com/%s" $name | quote }}
 
