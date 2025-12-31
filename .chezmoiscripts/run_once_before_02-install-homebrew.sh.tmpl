@@ -4,23 +4,21 @@
 
 set -euo pipefail
 
-echo "==> Setting up Homebrew..."
-
-echo "Installing Homebrew..."
+echo "📦 Installing Homebrew..."
 
 # Install Homebrew
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-echo "Homebrew installation complete!"
-
 # Setup Homebrew environment
 test -d /home/linuxbrew/.linuxbrew && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
-# Verify installation
-echo "Homebrew version: $(brew --version | head -1)"
+# インストール確認
+if command -v brew &> /dev/null; then
+    echo "✅ Homebrew installed successfully"
+    echo "Homebrew version: $(brew --version)"
+else
+    echo "⚠️ Homebrew installation may have failed"
+    exit 1
+fi
 
-# Update Homebrew
-echo "Updating Homebrew..."
-brew update --force --quiet
-
-echo "==> Homebrew setup complete!"
+echo "✅ Homebrew setup complete"

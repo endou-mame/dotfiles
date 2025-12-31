@@ -1,0 +1,278 @@
+#!/bin/bash
+# chezmoi run_once script: Install system packages
+# This script runs once per machine
+#
+# NOTE: CLI tools (curl, git, wget, neovim, etc.) are managed by Homebrew.
+#       This script only installs packages that CANNOT be managed by Homebrew:
+#       - System services (docker daemon, openssh)
+#       - Login shell (zsh)
+#       - System privileges (sudo)
+#       - Distro-specific meta-packages (base-devel, build-essential)
+
+set -eu
+
+echo "==> Installing system packages..."
+
+{{ if eq .chezmoi.os "linux" }}
+
+{{ if eq .chezmoi.osRelease.id "arch" }}
+# ===========================================================================
+# Arch Linux
+# ===========================================================================
+echo "Detected: Arch Linux"
+
+PACKAGES=(
+    # System fundamentals
+    base
+    base-devel
+    sudo
+    which
+
+    # Shell (login shell needs system package)
+    zsh
+
+    # Services (require systemd integration)
+    docker
+    openssh
+)
+
+install_packages() {
+    local SUDO=""
+    if command -v sudo &> /dev/null && [ "$EUID" -ne 0 ]; then
+        SUDO="sudo"
+    fi
+
+    $SUDO pacman -Sy --noconfirm
+
+    for pkg in "$@"; do
+        if ! pacman -Qi "$pkg" &> /dev/null; then
+            echo "Installing: $pkg"
+            $SUDO pacman -S --noconfirm "$pkg"
+        else
+            echo "Already installed: $pkg"
+        fi
+    done
+}
+
+install_packages "${PACKAGES[@]}"
+
+{{ else if eq .chezmoi.osRelease.id "ubuntu" }}
+# ===========================================================================
+# Ubuntu (Docker from official repository)
+# ===========================================================================
+echo "Detected: Ubuntu"
+
+PACKAGES=(
+    # System fundamentals
+    build-essential
+    sudo
+
+    # Shell
+    zsh
+
+    # Services
+    openssh-client
+
+    # Docker (from official repository, added below)
+    docker-ce
+    docker-ce-cli
+    containerd.io
+    docker-buildx-plugin
+    docker-compose-plugin
+)
+
+install_packages() {
+    local SUDO=""
+    if command -v sudo &> /dev/null && [ "$EUID" -ne 0 ]; then
+        SUDO="sudo"
+    fi
+
+    # Remove conflicting packages (unofficial Docker packages)
+    echo "Removing conflicting Docker packages if present..."
+    $SUDO apt-get remove -y docker.io docker-compose docker-compose-v2 docker-doc podman-docker containerd runc 2>/dev/null || true
+
+    # Add Docker official repository if not exists
+    if ! [ -f /etc/apt/sources.list.d/docker.sources ]; then
+        echo "Adding Docker official repository..."
+        $SUDO apt-get update
+        $SUDO apt-get install -y ca-certificates curl
+
+        $SUDO install -m 0755 -d /etc/apt/keyrings
+        $SUDO curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+        $SUDO chmod a+r /etc/apt/keyrings/docker.asc
+
+        $SUDO tee /etc/apt/sources.list.d/docker.sources > /dev/null <<SOURCES
+Types: deb
+URIs: https://download.docker.com/linux/ubuntu
+Suites: $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}")
+Components: stable
+Signed-By: /etc/apt/keyrings/docker.asc
+SOURCES
+    fi
+
+    $SUDO apt-get update
+
+    for pkg in "$@"; do
+        if ! dpkg -l "$pkg" 2>/dev/null | grep -q "^ii"; then
+            echo "Installing: $pkg"
+            $SUDO apt-get install -y "$pkg"
+        else
+            echo "Already installed: $pkg"
+        fi
+    done
+}
+
+{{ else if eq .chezmoi.osRelease.id "debian" }}
+# ===========================================================================
+# Debian (Docker from official repository)
+# ===========================================================================
+echo "Detected: Debian"
+
+PACKAGES=(
+    # System fundamentals
+    build-essential
+    sudo
+
+    # Shell
+    zsh
+
+    # Services
+    openssh-client
+
+    # Docker (from official repository, added below)
+    docker-ce
+    docker-ce-cli
+    containerd.io
+    docker-buildx-plugin
+    docker-compose-plugin
+)
+
+install_packages() {
+    local SUDO=""
+    if command -v sudo &> /dev/null && [ "$EUID" -ne 0 ]; then
+        SUDO="sudo"
+    fi
+
+    # Remove conflicting packages (unofficial Docker packages)
+    echo "Removing conflicting Docker packages if present..."
+    $SUDO apt-get remove -y docker.io docker-compose docker-doc podman-docker containerd runc 2>/dev/null || true
+
+    # Add Docker official repository if not exists
+    if ! [ -f /etc/apt/sources.list.d/docker.sources ]; then
+        echo "Adding Docker official repository..."
+        $SUDO apt-get update
+        $SUDO apt-get install -y ca-certificates curl
+
+        $SUDO install -m 0755 -d /etc/apt/keyrings
+        $SUDO curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
+        $SUDO chmod a+r /etc/apt/keyrings/docker.asc
+
+        $SUDO tee /etc/apt/sources.list.d/docker.sources > /dev/null <<SOURCES
+Types: deb
+URIs: https://download.docker.com/linux/debian
+Suites: $(. /etc/os-release && echo "$VERSION_CODENAME")
+Components: stable
+Signed-By: /etc/apt/keyrings/docker.asc
+SOURCES
+    fi
+
+    $SUDO apt-get update
+
+    for pkg in "$@"; do
+        if ! dpkg -l "$pkg" 2>/dev/null | grep -q "^ii"; then
+            echo "Installing: $pkg"
+            $SUDO apt-get install -y "$pkg"
+        else
+            echo "Already installed: $pkg"
+        fi
+    done
+}
+
+{{ else if eq .chezmoi.osRelease.id "fedora" }}
+# ===========================================================================
+# Fedora (Docker from official repository)
+# ===========================================================================
+echo "Detected: Fedora"
+
+PACKAGES=(
+    # System fundamentals (Development Tools group installed separately)
+    sudo
+
+    # Shell
+    zsh
+
+    # Services
+    openssh-clients
+
+    # Docker (from official repository, added below)
+    docker-ce
+    docker-ce-cli
+    containerd.io
+    docker-buildx-plugin
+    docker-compose-plugin
+)
+
+install_packages() {
+    local SUDO=""
+    if command -v sudo &> /dev/null && [ "$EUID" -ne 0 ]; then
+        SUDO="sudo"
+    fi
+
+    # Remove conflicting packages (unofficial Docker packages)
+    echo "Removing conflicting Docker packages if present..."
+    $SUDO dnf remove -y docker docker-client docker-client-latest docker-common \
+        docker-latest docker-latest-logrotate docker-logrotate \
+        docker-selinux docker-engine-selinux docker-engine 2>/dev/null || true
+
+    # Install development tools group
+    $SUDO dnf groupinstall -y "Development Tools" || true
+
+    # Add Docker official repository if not exists
+    if ! dnf repolist | grep -q "docker-ce"; then
+        echo "Adding Docker official repository..."
+        $SUDO dnf install -y dnf-plugins-core
+        # Use the new dnf5 syntax if available, fallback to legacy
+        if dnf config-manager --help 2>&1 | grep -q "addrepo"; then
+            $SUDO dnf config-manager addrepo --from-repofile=https://download.docker.com/linux/fedora/docker-ce.repo
+        else
+            $SUDO dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
+        fi
+    fi
+
+    $SUDO dnf check-update || true
+
+    for pkg in "$@"; do
+        if ! rpm -q "$pkg" &> /dev/null; then
+            echo "Installing: $pkg"
+            $SUDO dnf install -y "$pkg" || echo "Warning: Failed to install $pkg"
+        else
+            echo "Already installed: $pkg"
+        fi
+    done
+}
+
+{{ else }}
+# ===========================================================================
+# Unsupported distro
+# ===========================================================================
+echo "Unsupported distro: {{ .chezmoi.osRelease.id }}"
+echo "Please install the following packages manually:"
+echo "  - zsh (login shell)"
+echo "  - docker (daemon)"
+echo "  - openssh"
+echo "  - build tools (gcc, make, etc.)"
+exit 0
+
+{{ end }}
+
+install_packages "${PACKAGES[@]}"
+
+echo "==> System packages installation complete!"
+echo ""
+echo "NOTE: Additional CLI tools will be installed via Homebrew."
+echo "      Run: brew bundle --file=~/.local/share/chezmoi/Brewfile"
+
+{{ else }}
+echo "This script only supports Linux."
+exit 0
+{{ end }}
