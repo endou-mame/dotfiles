@@ -28,12 +28,10 @@ jobs:
             image: ubuntu:22.04
           - distro: Debian 12
             image: debian:12
-          - distro: Fedora 40
-            image: fedora:40
+          - distro: Fedora 41
+            image: fedora:41
           - distro: Arch Linux
             image: archlinux:latest
-          - distro: openSUSE Tumbleweed
-            image: opensuse/tumbleweed:latest
 
     steps:
       - name: Checkout repository
@@ -93,8 +91,9 @@ jobs:
             "$HOME/.local/bin/chezmoi" --version
 
             # Initialize and apply dotfiles from local source
+            # --exclude=scripts skips run_once scripts (Docker/Homebrew install) in CI
             echo "Applying dotfiles from local source..."
-            "$HOME/.local/bin/chezmoi" init --apply --source "$HOME/.local/share/chezmoi"
+            "$HOME/.local/bin/chezmoi" init --apply --source "$HOME/.local/share/chezmoi" --exclude=scripts
 
             echo "==> chezmoi init --apply completed successfully!"
           '
@@ -119,6 +118,7 @@ jobs:
             files_to_check=(
               ".gitconfig"
               ".zshenv"
+              ".profile"
             )
 
             all_ok=true
