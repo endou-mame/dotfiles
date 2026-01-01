@@ -1,2 +1,4 @@
+brew "icu4c@78"
+vscode "command is only available in wsl or inside a visual studio code terminal."
 go "cmd/go"
 go "cmd/gofmt"
