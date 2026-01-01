@@ -8,7 +8,7 @@ echo "📦 Installing Claude Code (native)..."
 
 curl -fsSL https://claude.ai/install.sh | bash
 
-CLAUDE_BIN="$HOME/.local/bin/claude"
+CLAUDE_BIN="${HOME}/.local/bin/claude"
 
 # インストール確認
 if [[ -x "$CLAUDE_BIN" ]]; then
