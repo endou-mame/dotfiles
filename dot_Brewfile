@@ -2,14 +2,9 @@
 # CLI Tools (moved from pacman/apt)
 # =============================================================================
 
-brew "curl"
-brew "wget"
-brew "git"
 brew "neovim"
 brew "re2c"
 
-brew "docker-compose"
-brew "docker-buildx"
 
 # =============================================================================
 # Development Libraries (for PHP/other builds via mise)
