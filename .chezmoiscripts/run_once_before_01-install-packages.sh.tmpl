@@ -15,21 +15,29 @@ echo "==> Installing system packages..."
 
 {{ if eq .chezmoi.os "linux" }}
 
+# ===========================================================================
+# Common packages (all distros)
+# ===========================================================================
+COMMON_PACKAGES=(
+    sudo
+    zsh
+    curl
+    git
+    wget
+    vim
+)
+
 {{ if eq .chezmoi.osRelease.id "arch" }}
 # ===========================================================================
 # Arch Linux
 # ===========================================================================
 echo "Detected: Arch Linux"
 
-PACKAGES=(
+DISTRO_PACKAGES=(
     # System fundamentals
     base
     base-devel
-    sudo
     which
-
-    # Shell (login shell needs system package)
-    zsh
 
     # Services (require systemd integration)
     docker
@@ -54,26 +62,20 @@ install_packages() {
     done
 }
 
-install_packages "${PACKAGES[@]}"
-
 {{ else if eq .chezmoi.osRelease.id "ubuntu" }}
 # ===========================================================================
 # Ubuntu (Docker from official repository)
 # ===========================================================================
 echo "Detected: Ubuntu"
 
-PACKAGES=(
+DISTRO_PACKAGES=(
     # System fundamentals
     build-essential
-    sudo
-
-    # Shell
-    zsh
 
     # Services
     openssh-client
 
-    # Docker (from official repository, added below)
+    # Docker (from official repository)
     docker-ce
     docker-ce-cli
     containerd.io
@@ -81,11 +83,8 @@ PACKAGES=(
     docker-compose-plugin
 )
 
-install_packages() {
-    local SUDO=""
-    if command -v sudo &> /dev/null && [ "$EUID" -ne 0 ]; then
-        SUDO="sudo"
-    fi
+setup_docker_repo() {
+    local SUDO="$1"
 
     # Remove conflicting packages (unofficial Docker packages)
     echo "Removing conflicting Docker packages if present..."
@@ -109,7 +108,15 @@ Components: stable
 Signed-By: /etc/apt/keyrings/docker.asc
 SOURCES
     fi
+}
 
+install_packages() {
+    local SUDO=""
+    if command -v sudo &> /dev/null && [ "$EUID" -ne 0 ]; then
+        SUDO="sudo"
+    fi
+
+    setup_docker_repo "$SUDO"
     $SUDO apt-get update
 
     for pkg in "$@"; do
@@ -128,18 +135,14 @@ SOURCES
 # ===========================================================================
 echo "Detected: Debian"
 
-PACKAGES=(
+DISTRO_PACKAGES=(
     # System fundamentals
     build-essential
-    sudo
-
-    # Shell
-    zsh
 
     # Services
     openssh-client
 
-    # Docker (from official repository, added below)
+    # Docker (from official repository)
     docker-ce
     docker-ce-cli
     containerd.io
@@ -147,11 +150,8 @@ PACKAGES=(
     docker-compose-plugin
 )
 
-install_packages() {
-    local SUDO=""
-    if command -v sudo &> /dev/null && [ "$EUID" -ne 0 ]; then
-        SUDO="sudo"
-    fi
+setup_docker_repo() {
+    local SUDO="$1"
 
     # Remove conflicting packages (unofficial Docker packages)
     echo "Removing conflicting Docker packages if present..."
@@ -175,7 +175,15 @@ Components: stable
 Signed-By: /etc/apt/keyrings/docker.asc
 SOURCES
     fi
+}
 
+install_packages() {
+    local SUDO=""
+    if command -v sudo &> /dev/null && [ "$EUID" -ne 0 ]; then
+        SUDO="sudo"
+    fi
+
+    setup_docker_repo "$SUDO"
     $SUDO apt-get update
 
     for pkg in "$@"; do
@@ -194,17 +202,11 @@ SOURCES
 # ===========================================================================
 echo "Detected: Fedora"
 
-PACKAGES=(
-    # System fundamentals (Development Tools group installed separately)
-    sudo
-
-    # Shell
-    zsh
-
+DISTRO_PACKAGES=(
     # Services
     openssh-clients
 
-    # Docker (from official repository, added below)
+    # Docker (from official repository)
     docker-ce
     docker-ce-cli
     containerd.io
@@ -212,11 +214,8 @@ PACKAGES=(
     docker-compose-plugin
 )
 
-install_packages() {
-    local SUDO=""
-    if command -v sudo &> /dev/null && [ "$EUID" -ne 0 ]; then
-        SUDO="sudo"
-    fi
+setup_docker_repo() {
+    local SUDO="$1"
 
     # Remove conflicting packages (unofficial Docker packages)
     echo "Removing conflicting Docker packages if present..."
@@ -238,7 +237,15 @@ install_packages() {
             $SUDO dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
         fi
     fi
+}
 
+install_packages() {
+    local SUDO=""
+    if command -v sudo &> /dev/null && [ "$EUID" -ne 0 ]; then
+        SUDO="sudo"
+    fi
+
+    setup_docker_repo "$SUDO"
     $SUDO dnf check-update || true
 
     for pkg in "$@"; do
@@ -265,7 +272,11 @@ exit 0
 
 {{ end }}
 
-install_packages "${PACKAGES[@]}"
+# ===========================================================================
+# Install all packages
+# ===========================================================================
+ALL_PACKAGES=("${COMMON_PACKAGES[@]}" "${DISTRO_PACKAGES[@]}")
+install_packages "${ALL_PACKAGES[@]}"
 
 echo "==> System packages installation complete!"
 echo ""
