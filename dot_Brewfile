@@ -1,22 +1,2 @@
-# =============================================================================
-# CLI Tools (moved from pacman/apt)
-# =============================================================================
-
-brew "neovim"
-brew "re2c"
-
-
-# =============================================================================
-# Development Libraries (for PHP/other builds via mise)
-# =============================================================================
-
-brew "gd"           # Graphics library
-brew "libzip"       # ZIP library
-brew "oniguruma"    # Regex library
-brew "libpq"        # PostgreSQL client library
-
-# =============================================================================
-# Tools managed by mise - DO NOT ADD HERE
-# =============================================================================
-# bat, eza, jq, starship, gh, ghq, fastfetch, dive, sheldon
-# These are in ~/.config/mise/config.toml
+go "cmd/go"
+go "cmd/gofmt"
