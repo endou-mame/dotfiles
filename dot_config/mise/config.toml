@@ -1,3 +1,8 @@
+[env]
+PKG_CONFIG_PATH = "{{ exec(command='brew --prefix libpq') | trim }}/lib/pkgconfig:{{ get_env(name='PKG_CONFIG_PATH', default='') }}"
+PGSQL_CFLAGS = "-I{{ exec(command='brew --prefix libpq') | trim }}/include"
+PGSQL_LIBS = "-L{{ exec(command='brew --prefix libpq') | trim }}/lib -lpq"
+
 [tools]
 # ===== System info =====
 fastfetch = "latest" # System information tool
@@ -21,7 +26,7 @@ dive = "latest" # Docker image layer explorer
 # ===== Language runtimes =====
 go = "latest"
 node = "lts"
-php = "8.5"
+php = "latest"
 python = "latest"
 uv = "latest"
 
