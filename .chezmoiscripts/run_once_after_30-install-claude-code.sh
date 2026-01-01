@@ -8,10 +8,12 @@ echo "📦 Installing Claude Code (native)..."
 
 curl -fsSL https://claude.ai/install.sh | bash
 
+CLAUDE_BIN="$HOME/.local/bin/claude"
+
 # インストール確認
-if command -v claude &> /dev/null; then
+if [[ -x "$CLAUDE_BIN" ]]; then
     echo "✅ Claude Code installed successfully"
-    echo "Claude Code version: $(claude --version)"
+    echo "Claude Code version: $("$CLAUDE_BIN" --version)"
 else
     echo "⚠️ Claude Code installation may have failed"
     exit 1
