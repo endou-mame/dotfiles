@@ -1,3 +1,7 @@
+#
+# ~/.zshrc
+#
+
 # =============================================================================
 # History 設定
 # =============================================================================
@@ -27,6 +31,12 @@ setopt COMPLETE_IN_WORD      # 単語の途中でも補完
 setopt ALWAYS_TO_END         # 補完後カーソルを末尾に
 
 # =============================================================================
+# Linuxbrew (Homebrew for Linux)
+# https://docs.brew.sh/Homebrew-on-Linux
+# =============================================================================
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+# =============================================================================
 # Mise (バージョン管理ツール)
 # https://mise.jdx.dev
 # =============================================================================
@@ -51,34 +61,15 @@ eval "$(starship init zsh)"
 eval "$(sheldon source)"
 
 # =============================================================================
-# Linuxbrew (Homebrew for Linux)
-# https://docs.brew.sh/Homebrew-on-Linux
-# =============================================================================
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-
-# =============================================================================
 # キーバインド追加（Home/End）
 # =============================================================================
 bindkey "^[[H" beginning-of-line
 bindkey "^[[F" end-of-line
 
 # =============================================================================
-# エイリアス
+# エイリアス読み込み
 # =============================================================================
-# eza settings
-# https://github.com/eza-community/eza
-alias ls='eza $EZA_DEFAULT_PARAMS'
-alias l='eza --git-ignore $EZA_DEFAULT_PARAMS'
-alias ll='eza --all --header --long $EZA_DEFAULT_PARAMS'
-alias llm='eza --all --header --long --sort=modified $EZA_DEFAULT_PARAMS'
-alias la='eza -lbhHigUmuSa'
-alias lx='eza -lbhHigUmuSa@'
-alias lt='eza --tree $EZA_DEFAULT_PARAMS'
-alias tree='eza --tree $EZA_DEFAULT_PARAMS'
-
-# bat settings
-# https://github.com/sharkdp/bat
-alias cat="bat --theme-dark default --theme-light GitHub"
+[[ -f "$HOME/.config/shell/alias.sh" ]] && . "$HOME/.config/shell/alias.sh"
 
 # =============================================================================
 # 関数

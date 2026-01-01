@@ -19,6 +19,6 @@
 .claude/stats-cache.json
 .claude/telemetry
 
-.config/zsh/.zcompcache/
-.config/zsh/.zcompdump
-.config/zsh/.zsh_history
+.config/shell/zsh/.zcompcache/
+.config/shell/zsh/.zcompdump
+.config/shell/zsh/.zsh_history
