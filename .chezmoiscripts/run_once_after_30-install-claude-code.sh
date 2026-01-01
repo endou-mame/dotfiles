@@ -6,12 +6,12 @@ set -euo pipefail
 
 echo "📦 Installing Claude Code (native)..."
 
-curl -fsSL https://claude.ai/install.sh | bash
-
 CLAUDE_BIN="${HOME}/.local/bin/claude"
 
 echo "successfully installed Claude Code binary at:"
 echo "$CLAUDE_BIN"
+
+curl -fsSL https://claude.ai/install.sh | bash
 
 # インストール確認
 if [[ -x "$CLAUDE_BIN" ]]; then
