@@ -1,6 +1,6 @@
 extensions:
   vscode:
-    ext-ids:
+    ext_ids:
       - anthropic.claude-code
       - bierner.markdown-footnotes
       - bierner.markdown-mermaid

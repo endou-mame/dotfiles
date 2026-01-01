@@ -9,7 +9,7 @@ echo "==> Installing VSCode extensions..."
 
 INSTALLED_EXTENSIONS=$(code --list-extensions)
 
-{{ range .extensions.vscode.ext-ids -}}
+{{ range .extensions.vscode.ext_ids -}}
 if ! echo "$INSTALLED_EXTENSIONS" | grep -q "^{{ . }}$"; then
   echo "Installing extension: {{ . }}"
   code --install-extension "{{ . }}" --force
