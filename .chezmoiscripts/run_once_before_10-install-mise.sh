@@ -8,10 +8,12 @@ echo "📦 Installing mise..."
 
 curl https://mise.run | sh
 
+MISE_BIN="${HOME}/.local/bin/mise"
+
 # インストール確認
-if command -v mise &> /dev/null; then
+if [ -x "$MISE_BIN" ]; then
     echo "✅ mise installed successfully"
-    echo "mise version: $(mise --version)"
+    echo "mise version: $($MISE_BIN --version)"
 else
     echo "⚠️ mise installation may have failed"
     exit 1
