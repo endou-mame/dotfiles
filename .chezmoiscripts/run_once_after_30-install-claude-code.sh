@@ -10,6 +10,8 @@ curl -fsSL https://claude.ai/install.sh | bash
 
 CLAUDE_BIN="${HOME}/.local/bin/claude"
 
+echo "$CLAUDE_BIN"
+
 # インストール確認
 if [[ -x "$CLAUDE_BIN" ]]; then
     echo "✅ Claude Code installed successfully"
