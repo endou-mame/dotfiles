@@ -4,14 +4,23 @@
 
 set -euo pipefail
 
-echo "📦 Installing Claude Code (native)..."
-
 CLAUDE_BIN="${HOME}/.local/bin/claude"
 
-echo "successfully installed Claude Code binary at:"
-echo "$CLAUDE_BIN"
+echo "📦 Installing Claude Code (native)..."
+echo "DEBUG: HOME=${HOME}"
+echo "DEBUG: CLAUDE_BIN=${CLAUDE_BIN}"
 
 curl -fsSL https://claude.ai/install.sh | bash
+
+echo "DEBUG: Installation completed, checking binary..."
+echo "DEBUG: ls result:"
+ls -la "$CLAUDE_BIN" 2>&1 || echo "DEBUG: ls failed"
+
+echo "DEBUG: test -x result:"
+test -x "$CLAUDE_BIN" && echo "DEBUG: executable" || echo "DEBUG: not executable"
+
+echo "DEBUG: test -L result:"
+test -L "$CLAUDE_BIN" && echo "DEBUG: is symlink" || echo "DEBUG: not symlink"
 
 # インストール確認
 if [[ -x "$CLAUDE_BIN" ]]; then
