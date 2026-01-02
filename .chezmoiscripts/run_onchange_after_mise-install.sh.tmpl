@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# mise config hash: {{ include "dot_config/mise/config.toml" | sha256sum }}
+
+set -euo pipefail
+
+{{ if lookPath "mise" -}}
+echo "==> Installing mise tools from config.toml..."
+
+# Run mise install with global config
+if [ -f "${HOME}/.config/mise/config.toml" ]; then
+    echo "Running mise install..."
+    mise install --yes
+    echo "Running mise prune..."
+    mise prune --yes
+else
+    echo "Warning: ~/.config/mise/config.toml not found, skipping mise install"
+fi
+
+echo "==> mise tools installation complete!"
+{{ end -}}

@@ -7,17 +7,6 @@ set -euo pipefail
 {{ if lookPath "brew" -}}
 echo "==> Installing Homebrew packages from Brewfile..."
 
-# Setup Homebrew environment
-test -d /home/linuxbrew/.linuxbrew && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-
-# Setup Homebrew environment
-if [ -x "${HOMEBREW_PREFIX}/bin/brew" ]; then
-    eval "$(${HOMEBREW_PREFIX}/bin/brew shellenv)"
-else
-    echo "Error: Homebrew is not installed"
-    exit 1
-fi
-
 # Run brew bundle with global Brewfile
 if [ -f "${HOME}/.Brewfile" ]; then
     echo "Running brew bundle..."
