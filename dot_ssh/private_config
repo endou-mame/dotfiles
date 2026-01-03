@@ -1,0 +1,9 @@
+# how to connect for the first time
+# > ssh -T git@github.com
+
+Host github.com
+	HostName github.com
+	User git
+	IdentityFile ~/.ssh/github/id_ed25519
+	TCPKeepAlive yes
+	IdentitiesOnly yes

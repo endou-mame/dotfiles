@@ -22,3 +22,7 @@
 .config/shell/zsh/.zcompcache/
 .config/shell/zsh/.zcompdump
 .config/shell/zsh/.zsh_history
+
+# SSH config - ignore all but config file
+.ssh/*
+!.ssh/config
