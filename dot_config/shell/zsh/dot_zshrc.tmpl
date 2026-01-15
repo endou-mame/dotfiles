@@ -31,10 +31,17 @@ setopt COMPLETE_IN_WORD      # 単語の途中でも補完
 setopt ALWAYS_TO_END         # 補完後カーソルを末尾に
 
 # =============================================================================
-# Linuxbrew (Homebrew for Linux)
-# https://docs.brew.sh/Homebrew-on-Linux
+# Homebrew
 # =============================================================================
+{{- if eq .chezmoi.os "darwin" }}
+if [[ -f /opt/homebrew/bin/brew ]]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [[ -f /usr/local/bin/brew ]]; then
+    eval "$(/usr/local/bin/brew shellenv)"
+fi
+{{- else if eq .chezmoi.os "linux" }}
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+{{- end }}
 
 # =============================================================================
 # Mise (バージョン管理ツール)
