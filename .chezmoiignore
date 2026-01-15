@@ -26,3 +26,9 @@
 # SSH config - ignore all but config file
 .ssh/*
 !.ssh/config
+
+# OS-specific scripts
+{{- if eq .chezmoi.os "darwin" }}
+run_once_before_01-install-packages.sh.tmpl
+run_once_before_02-install-homebrew.sh.tmpl
+{{- end }}
