@@ -4,6 +4,24 @@ PGSQL_CFLAGS = "-I{{ exec(command='brew --prefix libpq') | trim }}/include"
 PGSQL_LIBS = "-L{{ exec(command='brew --prefix libpq') | trim }}/lib -lpq"
 PHP_WITHOUT_PEAR = "yes"
 
+# HACK:
+# ## 問題
+# mise/asdf で PHP 8.5 をインストールすると以下のエラーでビルド失敗
+# ```
+# fatal error: error in backend: failed to perform tail call elimination on a call site marked musttail
+# ```
+# ## 原因
+# - PHP 8.5 で導入された TAILCALL VM が Clang 19+ の musttail 属性を使用
+# - Apple Clang 17 はこの属性を正しく処理できない
+# - PHP 8.5.1 で macOS の configure チェックが修正され、TAILCALL VM が有効化されるようになった結果、このエラーが発生
+# ## 対策
+# Homebrew LLVM (Clang 19+) を CC/CXX に設定して mise でビルド
+# 関連リンク
+# php/php-src#20546 - macOS での preserve_none チェック問題
+# Homebrew/homebrew-core#255299 - Homebrew の PHP 8.5 対応
+CC = "{{ exec(command='brew --prefix llvm') | trim }}/bin/clang"
+CXX = "{{ exec(command='brew --prefix llvm') | trim }}/bin/clang++"
+
 [tools]
 # ===== System info =====
 fastfetch = "latest" # System information tool
