@@ -31,6 +31,7 @@ bat = "latest"      # Cat clone with syntax highlighting
 eza = "latest"      # Modern replacement for ls
 jq = "latest"       # Command-line JSON processor
 starship = "latest" # Cross-shell prompt
+neovim = "latest"
 
 # ===== GitHub related =====
 gh = "latest"  # GitHub CLI
