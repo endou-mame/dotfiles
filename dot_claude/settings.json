@@ -112,6 +112,7 @@
   },
   "model": "opus",
   "enableAllProjectMcpServers": true,
+  "alwaysThinkingEnabled": true,
   "hooks": {
     "Notification": [
       {
@@ -119,7 +120,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cat | jq -r '(.title // \"Claude Code\"), (.message // \"通知が発生しました\")' | { read title; read message; ~/.claude/hooks/notify-to-windows.sh -t \"$title\" -m \"$message\" -T info; }"
+            "command": "cat | jq -r '(.title // \"Claude Code\"), (.message // \"通知が発生しました\")' | { read title; read message; osascript -e \"display notification \\\"$message\\\" with title \\\"$title\\\"\"; }"
           }
         ]
       }
@@ -130,7 +131,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "~/.claude/hooks/notify-to-windows.sh -t \"Claude Code\" -m \"作業が完了しました。\" -T success"
+            "command": "osascript -e 'display notification \"Claude is ready for more action!\" with title \"Claude Code\"'"
           }
         ]
       }
@@ -151,7 +152,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo '⚠️ Web 検索時は必ず「2025」を含めること' >&2"
+            "command": "echo '⚠️ Web 検索時は必ず「2026」を含めること' >&2"
           }
         ]
       },

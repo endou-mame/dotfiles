@@ -3,6 +3,7 @@
 # Claude Code - ローカル専用ファイル
 .claude/.DS_Store
 .claude/__store.db
+.claude/cache/
 .claude/debug/
 .claude/file-history/
 .claude/ide/
