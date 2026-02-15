@@ -1,0 +1,16 @@
+theme = TokyoNight
+maximize = true
+font-family = Moralerspace Argon
+background-opacity = 0.8
+macos-titlebar-style = tabs
+background-blur = true
+font-size = 16
+adjust-cell-height = 2
+font-thicken = true
+keybind = ctrl+h=goto_split:left
+keybind = ctrl+l=goto_split:right
+window-inherit-working-directory = true
+scrollback-limit = 1000000000
+
+keybind = performable:ctrl+c=copy_to_clipboard
+keybind = performable:ctrl+v=paste_from_clipboard

@@ -22,6 +22,8 @@
 .config/shell/zsh/.zcompcache/
 .config/shell/zsh/.zcompdump
 .config/shell/zsh/.zsh_history
+.config/github-copilot/
+.config/opencode
 
 # SSH config - ignore all but config file
 .ssh/*
