@@ -10,6 +10,7 @@
 * Follow Kent Beck's Test-Driven Development (`tdd` skill) and Tidy First (`tidying` skill) methodologies as the preferred approach for all development work.
 * Document at the right layer: Code → How, Tests → What, Commits → Why, Comments → Why not
 * Keep documentation up to date with code changes
+* Persue ideal outcomes and allow large timeframes unless specifically instructed otherwise
 
 ## Subagent Utilization Policy
 
@@ -74,4 +75,4 @@ Do not perform fine-grained file operations or code modifications yourself; leav
 
 ## Precautions for Web Searches
 
-It is currently 2025. When performing web searches, always include "2025" in the search query. Information from 2024 or earlier is likely to be outdated.
+It is currently 2026. When performing web searches, always include "2026" in the search query. Information from 2025 or earlier is likely to be outdated.
